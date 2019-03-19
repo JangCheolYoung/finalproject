@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="list">
+		<select id="contents" parameterType="String" resultType="dto.ItemDTO">
+			select * from items where item_namekey = #{item_namekey}
+		</select>
+		
+		<select id="list_group" parameterType="String" resultType="dto.ItemDTO">
+			select * from items where item_category = #{item_category}
+		</select>
+		
+		<select id="list_all" resultType="dto.ItemDTO">
+			select * from items order by item_category
+		</select>
+  </mapper>

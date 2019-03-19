@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<!-- template 설정은 여기서 한다. -->
+<tiles-definitions>
+	<!-- 메인 페이지 타일 설정 -->
+	<definition name="main"
+		template="/WEB-INF/view/template/layout.jsp">
+		<put-attribute name="title" value="GoGiPam" />
+		<put-attribute name="header"
+			value="/WEB-INF/view/template/header.jsp" />
+		<put-attribute name="body"
+			value="/WEB-INF/view/home_body.jsp" />
+		<put-attribute name="footer"
+			value="/WEB-INF/view/template/footer.jsp" />
+	</definition>
+	
+	<!-- 회원가입 약관 페이지 타일 설정 -->
+	<definition name = "memagree" extends = "main">
+		<put-attribute name="body"
+					   value="/WEB-INF/view/member/agree.jsp"></put-attribute>
+	</definition>
+	
+	<!-- 회원가입 페이지 타일 설정 -->
+	<definition name = "memjoin" extends = "main">
+		<put-attribute name="body"
+					   value="/WEB-INF/view/member/join.jsp"></put-attribute>
+	</definition>
+	
+	<!-- 상품 리스트 페이지 타일 설정 -->
+	<definition name = "productlist" extends = "main">
+		<put-attribute name="body"
+					   value="/WEB-INF/view/product/productlist.jsp"></put-attribute>
+	</definition>
+	
+	<!-- 상품 리스트 페이지 타일 설정 -->
+	<definition name = "productdetail" extends = "main">
+		<put-attribute name="body"
+					   value="/WEB-INF/view/product/detail.jsp"></put-attribute>
+	</definition>
+	
+	<!-- 소개 페이지 타일 설정 -->
+	<definition name = "introduce" extends = "main">
+		<put-attribute name="body"
+					   value="/WEB-INF/view/brandstory.jsp"></put-attribute>
+	</definition>
+	
+	<!-- 주문 페이지 타일 설정 -->
+	<definition name = "order" extends = "main">
+		<put-attribute name="body"
+					   value="/WEB-INF/view/purchase/order.jsp"></put-attribute>
+	</definition>
+	
+</tiles-definitions>     

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="member">
+  	<insert id="insertMember" parameterType="dto.MemberDTO">		
+		insert into members (member_id, member_pwd, member_name, member_tel, join_date)
+		values (#{member_id}, #{member_pwd}, #{member_name}, #{member_tel}, sysdate)		
+	</insert>
+	
+	<select id="dupIdCheck" parameterType="java.lang.String" resultType="dto.MemberDTO">
+		select member_id from members where member_id = #{member_id}
+	</select>
+	
+	<select id="dupTelCheck" parameterType="java.lang.String" resultType="dto.MemberDTO">
+		select member_tel from members where member_tel = #{member_tel}
+	</select>
+  </mapper>

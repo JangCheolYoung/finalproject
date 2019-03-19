@@ -1,0 +1,111 @@
+@charset "UTF-8";
+
+.navbar-default {
+	background-color: #000000;
+	border-color: #000000;
+	height: 150px;
+}
+
+.navbar-default .navbar-brand {
+	color: #ffffff;
+}
+
+.navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus
+	{
+	color: #8e8796;
+}
+
+.navbar-default .navbar-text {
+	color: #ffffff;
+}
+
+.navbar-default .navbar-nav>li>a {
+	color: #ffffff;
+}
+
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus
+	{
+	color: #8e8796;
+}
+
+.navbar-default .navbar-nav>li>.dropdown-menu {
+	background-color: #000000;
+	text-align: center;
+	font-size: 25px;
+}
+
+#shoppingMDropdown {
+	margin-left: -20px;
+}
+
+#CCMDropdown {
+	margin-left: -33px;
+}
+
+.navbar-default .navbar-nav>li>.dropdown-menu>li>a {
+	color: #ffffff;
+}
+
+.navbar-default .navbar-nav>li>.dropdown-menu>li>a:hover,
+	.navbar-default .navbar-nav>li>.dropdown-menu>li>a:focus {
+	color: #8e8796;
+	background-color: #000000;
+}
+
+.navbar-default .navbar-nav>li>.dropdown-menu>li.divider {
+	background-color: #000000;
+}
+
+.navbar-default .navbar-nav .open .dropdown-menu>.active>a,
+	.navbar-default .navbar-nav .open .dropdown-menu>.active>a:hover,
+	.navbar-default .navbar-nav .open .dropdown-menu>.active>a:focus {
+	color: #8e8796;
+	background-color: #000000;
+}
+
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover,
+	.navbar-default .navbar-nav>.active>a:focus {
+	color: #8e8796;
+	background-color: #000000;
+}
+
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover,
+	.navbar-default .navbar-nav>.open>a:focus {
+	color: #8e8796;
+	background-color: #000000;
+}
+
+.navbar-default .navbar-toggle {
+	border-color: #000000;
+}
+
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus
+	{
+	background-color: #000000;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+	background-color: #ffffff;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+	border-color: #ffffff;
+}
+
+.navbar-default .navbar-link {
+	color: #ffffff;
+}
+
+.navbar-default .navbar-link:hover {
+	color: #8e8796;
+}
+
+.navbar-nav { padding-top: 40px; padding-left: 40px; }
+#navbar1 { padding-top: 10px; font-size: 25px; }
+#navbar2 { margin-top: -140px; font-size: 23px; margin-right: -130px; }
+.navbar-header { padding-top: 40px; }
+#shoppingMenu { margin-left: 50px; }
+#customerCMenu { margin-left: 50px; }
+#brandstoryMenu { margin-left: 50px; }
+#reviewMenu { margin-left: 50px; }
+#allMenu:hover, #allMenu:focus { color: #ffffff; }
