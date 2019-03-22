@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="address">
+  	<select id="countAddress" parameterType="String" resultType="java.lang.Integer">
+  		select count(*) from addresses where member_id = #{member_id}
+  	</select>
+  
+  	<select id="selectAddress" parameterType="String" resultType="dto.AddressDTO">
+  		select * from addresses where member_id = #{member_id} order by address_num
+  	</select>
+  
+  	<insert id="insertAddress" parameterType="dto.AddressDTO">		
+		insert into addresses
+		values (addresses_seq.nextval, #{member_id}, #{post_num}, #{address}, #{address_detail}, #{receiver_name}, #{receiver_tel})		
+	</insert>
+	
+	<update id="updateAddress" parameterType="dto.AddressDTO">		
+		update addresses set post_num = #{post_num}, 
+			address = #{address}, address_detail = #{address_detail}, receiver_name = #{receiver_name}, receiver_tel = #{receiver_name})
+				where address_num = #{address_num} and member_id = #{member_id}
+	</update>
+	
+	<delete id="deleteAddress" parameterType="dto.AddressDTO">
+		delete from addresses where address_num = #{address_num} and member_id = #{member_id} 
+	</delete>
+	
+  </mapper>

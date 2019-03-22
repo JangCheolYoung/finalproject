@@ -3,10 +3,14 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
+	<mvc:annotation-driven/> <!-- 리턴타입을 json 으로 변환하는 ResponseBody 사용시 -->
+	
 	<!-- [1] DataSource빈 선언 -->
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 	<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
@@ -24,6 +28,10 @@
 			<value>classpath:config/MemberMapper.xml</value>
 			<value>classpath:config/ListMapper.xml</value>
 			<value>classpath:config/OptionMapper.xml</value>
+			<value>classpath:config/AddressMapper.xml</value>
+			<value>classpath:config/CartMapper.xml</value>
+			<value>classpath:config/FaqMapper.xml</value>
+			<value>classpath:config/QnaMapper.xml</value>
 		</list>
 	</property>
 	</bean>
@@ -67,6 +75,22 @@
 	<bean id="odao" class="dao.OptionDAOImp">
 		<property name="sqlSession" ref="sqlSession"></property>
 	</bean>
+	
+	<bean id="adao" class="dao.AddressDAOImp">
+		<property name="sqlSession" ref="sqlSession"></property>
+	</bean>
+	
+	<bean id="fdao" class="dao.FaqDAOImp">
+		<property name="sqlSession" ref="sqlSession" />
+	</bean>
+
+	<bean id="cdao" class="dao.CartDAOImp">
+		<property name="sqlSession" ref="sqlSession" />
+	</bean>
+	
+	<bean id="qdao" class="dao.QnaDAOImp">
+		<property name="sqlSession" ref="sqlSession" />
+	</bean>
 
 	<!-- [8] Service 빈 선언 -->
 	<bean id="memService" class="service.MemberServiceImp">
@@ -79,6 +103,21 @@
 	
 	<bean id="optionService" class="service.OptionServiceImp">
 		<property name="odao" ref="odao"></property>
+	</bean>
+	
+	<bean id="addressService" class="service.AddressServiceImp">
+		<property name="adao" ref="adao"></property>
+	</bean>
+	
+	<bean id="faqService" class="service.FaqServiceImp">
+		<property name="fdao" ref="fdao"></property>
+	</bean>
+	
+	<bean id="cartService" class="service.CartServiceImp">
+		<property name="cdao" ref="cdao"></property>
+	</bean>
+	<bean id="qnaService" class="service.QnaServiceImp">
+		<property name="qdao" ref="qdao"></property>
 	</bean>
 	
 	<!-- 파일 업로드 시작 -->
@@ -102,7 +141,21 @@
 		<property name="memberService" ref="memService"></property>
 		<property name="listService" ref="listService"></property>
 		<property name="optionService" ref="optionService"></property>
+		<property name="addressService" ref="addressService"></property>
+		<property name="faqService" ref="faqService"></property>
+		<property name="cartService" ref="cartService"></property>
+		<property name="qnaService" ref="qnaService"></property>
 	</bean>
+	
+	<!-- interceptor -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/faqPage.do" />
+			<mvc:mapping path="/cart.do" />
+			<mvc:mapping path="/qnaPage.do" />
+			<bean class="interceptor.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 	
 	<!-- [10] View 빈 선언 -->
 	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">

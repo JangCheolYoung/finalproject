@@ -32,5 +32,26 @@ public class MemberDAOImp implements MemberDAO {
 	public MemberDTO dupTelCheck(String member_tel) {
 		return sqlSession.selectOne("member.dupTelCheck", member_tel);
 	}
+	
+	@Override
+	public int loginChk(MemberDTO mdto) {
+		return sqlSession.selectOne("member.login", mdto);
+	}
+	
+	@Override
+	public String findId(MemberDTO mdto) {
+		return sqlSession.selectOne("member.findid", mdto);
+	}
+
+	@Override
+	public int findPw(MemberDTO mdto) {
+		return sqlSession.selectOne("member.findpw", mdto);
+	}
+	
+	@Override
+	public void updatePwd(MemberDTO mdto) {
+		//System.out.println("updatePwd메소드.");
+		sqlSession.update("member.updatepw", mdto);
+	}
 
 }

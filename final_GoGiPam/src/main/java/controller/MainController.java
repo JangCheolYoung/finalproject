@@ -2,177 +2,639 @@ package controller;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.imgscalr.Scalr;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
+import dto.AddressDTO;
+import dto.CartDTO;
+import dto.FaqDTO;
 import dto.MemberDTO;
+import dto.QnaDTO;
+import dto.QnaPageDTO;
+import email.SendEmail;
+import email.Util;
+import service.AddressService;
+import service.CartService;
+import service.FaqService;
 import service.ListService;
 import service.MemberService;
 import service.OptionService;
+import service.QnaService;
 
 //http://localhost:8090/gogipam/main.do
-//http://localhost:8090/gogipam/memagree.do // ¾à°üµ¿ÀÇ
-//http://localhost:8090/gogipam/memjoin.do // È¸¿ø°¡ÀÔ
-//http://localhost:8090/gogipam/productlist.do // »óÇ° ¸®½ºÆ®
-//http://localhost:8090/gogipam/productdetail.do // »óÇ° »ó¼¼ÆäÀÌÁö
-//http://localhost:8090/gogipam/order.do // »óÇ° »ó¼¼ÆäÀÌÁö
+
+//http://localhost:8090/gogipam/memagree.do
+//http://localhost:8090/gogipam/memjoin.do
+//http://localhost:8090/gogipam/productlist.do
+//http://localhost:8090/gogipam/productdetail.do
+//http://localhost:8090/gogipam/order.do
+
+//http://localhost:8090/gogipam/login.do
+//http://localhost:8090/gogipam/logout.do
+//http://localhost:8090/gogipam/faqPage.do
+//http://localhost:8090/gogipam/cart.do
+//http://localhost:8090/gogipam/qnaPage.do
+//http://localhost:8090/gogipam/identify.do
+
 
 @Controller
-public class MainController {   
+public class MainController {
 	private MemberService memberService;
 	private ListService listService;
 	private OptionService optionService;
+	private AddressService addressService;
+	private FaqService faqService;
+	private CartService cartService;
+	private QnaService qnaService;
 
-	public MainController() { 
-	} 
-	
+	///////////////////////////////////////////////// Service ì„ ì–¸
+	public MainController() {
+	}
+
 	public void setMemberService(MemberService memberService) {
 		this.memberService = memberService;
 	}
-	
+
 	public void setListService(ListService listService) {
 		this.listService = listService;
-	}  
-	
+	}
+
 	public void setOptionService(OptionService optionService) {
 		this.optionService = optionService;
 	}
-	
-	//¾÷·Îµå ÇÏ´Â ÀÌ¹ÌÁö ÆÄÀÏ ½æ³×ÀÏ Á¦ÀÛ¿¡ ½áº¸ÀÚ
-	private void makeThumbnail(String filePath, String fileName, String fileExt) throws Exception {
-		// ÀúÀåµÈ ¿øº»ÆÄÀÏ·ÎºÎÅÍ BufferedImage °´Ã¼¸¦ »ı¼ºÇÕ´Ï´Ù.
-		BufferedImage srcImg = ImageIO.read(new File(filePath));
-		// ½æ³×ÀÏÀÇ ³Êºñ¿Í ³ôÀÌ ÀÔ´Ï´Ù.
-		int dw = 250, dh = 150;
-		
-		// ¿øº» ÀÌ¹ÌÁöÀÇ ³Êºñ¿Í ³ôÀÌ ÀÔ´Ï´Ù.
-		int ow = srcImg.getWidth();
-		int oh = srcImg.getHeight();
-		// ¿øº» ³Êºñ¸¦ ±âÁØÀ¸·Î ÇÏ¿© ½æ³×ÀÏÀÇ ºñÀ²·Î ³ôÀÌ¸¦ °è»êÇÕ´Ï´Ù.
-		int nw = ow; 
-		int nh = (ow * dh) / dw;
-		
-		// °è»êµÈ ³ôÀÌ°¡ ¿øº»º¸´Ù ³ô´Ù¸é cropÀÌ ¾ÈµÇ¹Ç·Î
-		// ¿øº» ³ôÀÌ¸¦ ±âÁØÀ¸·Î ½æ³×ÀÏÀÇ ºñÀ²·Î ³Êºñ¸¦ °è»êÇÕ´Ï´Ù.
-		if(nh > oh) { nw = (oh * dw) / dh; nh = oh; }
-		
-		// °è»êµÈ Å©±â·Î ¿øº»ÀÌ¹ÌÁö¸¦ °¡¿îµ¥¿¡¼­ crop ÇÕ´Ï´Ù.
-		BufferedImage cropImg = Scalr.crop(srcImg, (ow-nw)/2, (oh-nh)/2, nw, nh);
-		
-		// cropµÈ ÀÌ¹ÌÁö·Î ½æ³×ÀÏÀ» »ı¼ºÇÕ´Ï´Ù.
-		BufferedImage destImg = Scalr.resize(cropImg, dw, dh);
-		
-		// ½æ³×ÀÏÀ» ÀúÀåÇÕ´Ï´Ù. ÀÌ¹ÌÁö ÀÌ¸§ ¾Õ¿¡ "THUMB_" ¸¦ ºÙ¿© Ç¥½ÃÇß½À´Ï´Ù.
-		String thumbName = "/images/list" + "THUMB_" + fileName;
-		File thumbFile = new File(thumbName);
-		ImageIO.write(destImg, fileExt.toUpperCase(), thumbFile);
+
+	public void setAddressService(AddressService addressService) {
+		this.addressService = addressService;
+	}
+
+	public void setFaqService(FaqService faqService) {
+		this.faqService = faqService;
+	}
+
+	public void setCartService(CartService cartService) {
+		this.cartService = cartService;
 	}
 	
+	public void setQnaService(QnaService qnaService) {
+		this.qnaService = qnaService;
+	}
+	///////////////////////////////////////////////////// setService ì„ ì–¸
+
 	@RequestMapping("/main.do")
 	public String main() {
 		return "main";
-	} // ¸ŞÀÎ ÆäÀÌÁö
-	
+	}
+	///////////////////////////////////////////////////// ë©”ì¸í˜ì´ì§€ ì ‘ê·¼ ë§¤í•‘
+
 	@RequestMapping("/introduce.do")
 	public String introduce() {
 		return "introduce";
-	} // ¸ŞÀÎ ÆäÀÌÁö
+	}
+	////////////////////////////////////////////////////// ì†Œê°œí˜ì´ì§€ ì ‘ê·¼ ë§¤í•‘
+
+	@RequestMapping(value = "/faqPage.do")
+	public ModelAndView faqPage() {
+		ModelAndView mav = new ModelAndView();
+		String faq_category = "ìƒí’ˆê´€ë ¨";
+
+		mav.addObject("list", faqService.listProcess(faq_category));
+		mav.setViewName("faq");
+		return mav;
+
+	}// end faqPage()///////////
+
+	@RequestMapping(value = "/faqPage2.do", method = RequestMethod.GET)
+	public @ResponseBody List<FaqDTO> faqPage2(@RequestParam String faq_category) {
+		return faqService.listProcess(faq_category);
+	}
+	/////////////////////////////////////////////////////// FAQ í˜ì´ì§€ ì ‘ê·¼ ë§¤í•‘
 	
-	@RequestMapping(value="/memagree.do", method=RequestMethod.GET)
+	private String path;
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+	
+	QnaPageDTO pdto;
+	
+	// í˜ì´ì§€ ì‹¤í–‰.
+	// mavë¡œ í•´ë‹¹ member_idê°€ ì§€ë‹ˆëŠ” ë°ì´í„°ë¥¼ ê°€ì ¸ì™€ ë¿Œë ¤ì¤€ë‹¤.
+	@RequestMapping("/qnaPage.do")
+	public @ResponseBody ModelAndView qnaPage(HttpSession session) {
+		ModelAndView mav = new ModelAndView();
+		List<QnaDTO> list = null;
+		// ì„¸ì…˜ì—ì €ì¥ë˜ì–´ ìˆëŠ” ê°’ì„ ê°€ì ¸ì˜¨ë‹¤. (member_id)
+		String member_id = (String) session.getAttribute("member_id");
+
+		// ì´ ë ˆì½”ë“œ ìˆ˜ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
+		int totalRecord = qnaService.countPro(member_id);
+		int currentPage = 1;
+		pdto = new QnaPageDTO(currentPage, totalRecord);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pdto", pdto);
+		map.put("member_id", member_id);
+
+		// System.out.println(map.get("member_id"));
+		list = qnaService.listQuestionPro(map);
+
+		// for (int i = 0; i < list.size(); i++) {
+		// System.out.println(list.get(i).getQuestion_title());
+		// }
+
+		mav.addObject("list", list);
+		mav.addObject("pdto", pdto);
+		mav.setViewName("qna");
+
+		return mav;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ë¬¸ì˜ ë‚´ìš©ì„ ì‚½ì…í•˜ëŠ” ë©”ì†Œë“œ...
+	@RequestMapping(value = "/insertQuestion.do", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> questionPro(QnaDTO dto, QnaPageDTO pdto, HttpSession session) {
+		System.out.println(dto.getFilename());
+		MultipartFile file = dto.getFilename();
+		System.out.println("file:" + file);
+		if (file != null) {
+			String fileName = file.getOriginalFilename();
+			// ì¤‘ë³µíŒŒì¼ëª…ì„ ì²˜ë¦¬í•˜ê¸° ìœ„í•´ ë‚œìˆ˜ ë°œìƒ.
+			UUID random = UUID.randomUUID();
+			// String root = request.getSession().getServletContext().getRealPath("/");
+			// root+"temp/"
+			// String saveDirectory = root + "temp" + File.separator;
+			String saveDirectory = path;
+			File fe = new File(saveDirectory);
+			// í´ë”ê°€ ìˆëŠ”ì§€ í™•ì¸í•˜ê³ ~
+			if (!fe.exists()) {
+				fe.mkdir();
+			}
+			// íŒŒì¼ì„ ì €ì¥í•  ê²½ë¡œì™€ íŒŒì¼ëª… ìƒì„±
+			File ff = new File(saveDirectory, random + "_" + fileName);
+			try {
+				FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(ff));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			dto.setUpload(random + "_" + fileName);
+		}
+
+		String member_id = (String) session.getAttribute("member_id");
+		dto.setMember_id(member_id);
+
+		if (dto.getQuestion_file() == null) {
+			dto.setQuestion_file("null");
+		}
+
+		qnaService.insertQuestionPro(dto);
+
+		// ì´ ë ˆì½”ë“œ ìˆ˜ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
+		int totalRecord = qnaService.countPro(member_id);
+		if (pdto.getCurrentPage() == 0) {
+			pdto.setCurrentPage(1);
+		}
+		QnaPageDTO sendPdto = new QnaPageDTO(pdto.getCurrentPage(), totalRecord);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pdto", sendPdto);
+		map.put("member_id", member_id);
+		List<QnaDTO> list = qnaService.listQuestionPro(map);
+
+		System.out.println("totalPage:" + sendPdto.getTotalPage());
+
+		Map<String, Object> sendMap = new HashMap<String, Object>();
+		sendMap.put("list", list);
+		sendMap.put("pdto", sendPdto);
+
+		return sendMap;
+	}
+	// // ë¬¸ì˜ ë‚´ìš©ì„ ì‚½ì…í•˜ëŠ” ë©”ì†Œë“œ...
+	// @RequestMapping(value = "/insertQuestion.do", method = RequestMethod.POST)
+	// public @ResponseBody Map<String, Object> questionPro(QnaDTO dto, QnaPageDTO
+	// pdto, HttpSession session) {
+	// String member_id = (String) session.getAttribute("member_id");
+	// dto.setMember_id(member_id);
+	//
+	// if (dto.getQuestion_file() == null) {
+	// dto.setQuestion_file("null");
+	// }
+	//
+	// qnaService.insertQuestionPro(dto);
+	//
+	// // ì´ ë ˆì½”ë“œ ìˆ˜ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
+	// int totalRecord = qnaService.countPro(member_id);
+	// if (pdto.getCurrentPage() == 0) {
+	// pdto.setCurrentPage(1);
+	// }
+	// QnaPageDTO sendPdto = new QnaPageDTO(pdto.getCurrentPage(), totalRecord);
+	//
+	// Map<String, Object> map = new HashMap<String, Object>();
+	// map.put("pdto", sendPdto);
+	// map.put("member_id", member_id);
+	// List<QnaDTO> list = qnaService.listQuestionPro(map);
+	//
+	// System.out.println("totalPage:" + sendPdto.getTotalPage());
+	//
+	// Map<String, Object> sendMap = new HashMap<String, Object>();
+	// sendMap.put("list", list);
+	// sendMap.put("pdto", sendPdto);
+	//
+	//
+	//
+	// return sendMap;
+	// }
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	@RequestMapping(value = "/changeQuestion.do", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Object> changeQuestion(QnaPageDTO pdto, HttpSession session) {
+		String member_id = (String) session.getAttribute("member_id");
+
+		QnaDTO dto = new QnaDTO();
+		dto.setMember_id(member_id);
+
+		if (dto.getQuestion_file() == null) {
+			dto.setQuestion_file("null");
+		}
+
+		// ì´ ë ˆì½”ë“œ ìˆ˜ë¥¼ ê°€ì ¸ì˜¨ë‹¤.
+		int totalRecord = qnaService.countPro(member_id);
+		if (pdto.getCurrentPage() == 0) {
+			pdto.setCurrentPage(1);
+		}
+		QnaPageDTO sendPdto = new QnaPageDTO(pdto.getCurrentPage(), totalRecord);
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pdto", sendPdto);
+		map.put("member_id", member_id);
+		List<QnaDTO> list = qnaService.listQuestionPro(map);
+
+		// System.out.println("totalPage:"+sendPdto.getTotalPage());
+
+		Map<String, Object> sendMap = new HashMap<String, Object>();
+		sendMap.put("list", list);
+		sendMap.put("pdto", sendPdto);
+
+		return sendMap;
+	}
+	///////////////////////////////////////////////////////////////////////////// QnA
+	///////////////////////////////////////////////////////////////////////////// ê´€ë ¨
+	///////////////////////////////////////////////////////////////////////////// ë§¤í•‘
+
+	@RequestMapping(value = "/memagree.do", method = RequestMethod.GET)
 	public String memagree() {
-		return "memagree";		
-	} // È¸¿ø°¡ÀÔ ¾à°üµ¿ÀÇ ÆäÀÌÁö ÀÌµ¿
-	
-	@RequestMapping(value="/memagree.do", method=RequestMethod.POST)
+		return "memagree";
+	}
+
+	@RequestMapping(value = "/memagree.do", method = RequestMethod.POST)
 	public String memagreein() {
-		return "redirect:/memjoin.do";		
-	} // È¸¿ø°¡ÀÔ Ã³¸®
-	
-	@RequestMapping(value="/memjoin.do", method=RequestMethod.GET)
+		return "redirect:/memjoin.do";
+	}
+
+	@RequestMapping(value = "/memjoin.do", method = RequestMethod.GET)
 	public String memjoin() {
-		return "memjoin";		
-	} // È¸¿ø°¡ÀÔ ÆäÀÌÁö ÀÌµ¿
-	
-	@RequestMapping(value="/memjoin.do", method=RequestMethod.POST)
+		return "memjoin";
+	}
+
+	@RequestMapping(value = "/memjoin.do", method = RequestMethod.POST)
 	public String memjoinup(MemberDTO mdto) {
 		memberService.insertProcess(mdto);
-		return "redirect:/main.do";		
-	} // È¸¿ø°¡ÀÔ Ã³¸®
-	
-	@RequestMapping(value="/dupidchk.do", method=RequestMethod.POST)
+		return "redirect:/main.do";
+	}
+
+	@RequestMapping(value = "/dupidchk.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String dupidchk(String member_id) {
-		System.out.println(member_id);
+		// System.out.println(member_id);
 		MemberDTO dupIdChk = memberService.dupIdChkProcess(member_id);
-		System.out.println(dupIdChk);		
+		// System.out.println(dupIdChk);
 		String res = "f";
-		
-		if(dupIdChk != null)
+
+		if (dupIdChk != null)
 			res = "t";
-		
+
 		System.out.println(res);
 		return res;
-	} // ¾ÆÀÌµğ Áßº¹Ã¼Å© ÇÏ±â
-	
-	@RequestMapping(value="/duptelchk.do", method=RequestMethod.POST)
+	}
+
+	@RequestMapping(value = "/duptelchk.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String duptelchk(String member_tel) {
-		System.out.println(member_tel);
+		// System.out.println(member_tel);
 		MemberDTO dupTelChk = memberService.dupTelChkProcess(member_tel);
-		System.out.println(dupTelChk);		
+		// System.out.println(dupTelChk);
 		String res = "f";
-		
-		if(dupTelChk != null)
+
+		if (dupTelChk != null)
 			res = "t";
-		
+
 		System.out.println(res);
 		return res;
-	} // ¿¬¶ôÃ³ Áßº¹Ã¼Å© ÇÏ±â
-	
+	}
+
+	@RequestMapping("/login.do")
+	public String loginform() {
+		return "login";
+	}
+
+	// íšŒì› ì •ë³´ê°€ ìˆëŠ”ì§€ í™•ì¸.
+	@RequestMapping("/memCheck.do")
+	public @ResponseBody String memCheck(String member_id, String member_pwd) {
+		MemberDTO dto = new MemberDTO();
+		dto.setMember_id(member_id);
+		dto.setMember_pwd(member_pwd);
+
+		if (memberService.loginProcess(dto) == 1) {
+
+			return "success";
+		} else {
+
+			return "fail";
+		}
+	}
+
+	// ì…ë ¥í•œ ì•„ì´ë””ì™€ ë¹„ë²ˆìœ¼ë¡œ íšŒì›ì •ë³´ í…Œì´ë¸”ì—ì„œ ì°¾ì•„ì„œ ê²°ê³¼ê°’ì„ ë¦¬í„´.
+	@RequestMapping("/logPro.do")
+	public String loginPro(String returnUrl, MemberDTO dto, HttpSession session) {
+		// System.out.println(member_id);
+		// System.out.println(member_pwd);
+
+		// MemDTO dto = new MemDTO();
+		// dto.setMember_id(member_id);
+		// dto.setMember_pwd(member_pwd);
+
+		if (memberService.loginProcess(dto) == 1) {
+			// System.out.println("ê¸°ì¡´ session ê°’ : " + session.getAttribute("member_id"));
+			session.setAttribute("member_id", dto.getMember_id());
+			// System.out.println("ë¡œê·¸ì¸ ëœ session ê°’ : " + session.getAttribute("member_id"));
+
+			// ë¡œê·¸ì¸ ì„¸ì…˜ì€ 30ë¶„ë’¤ ìë™ìœ¼ë¡œ í•´ì œë¨.
+			session.setMaxInactiveInterval(24 * 60 * 60);
+			// System.out.println("ë¡œê·¸ì¸ ì„±ê³µ!!");
+			System.out.println("returnUrl : " + returnUrl);
+			if (returnUrl != "") {
+				return "redirect:/" + returnUrl;
+			}
+		}
+		return "redirect:/main.do";
+
+	}// end loginPro()/////////////////////////////////
+
+	@RequestMapping("/logout.do")
+	public String logoutProcess(HttpSession session) {
+		session.removeAttribute("member_id");
+		return "redirect:/main.do";
+	}// end logoutProcess()
+
+	@RequestMapping("/identify.do")
+	public String identify() {
+		return "identify";
+	}// end identify()/////////////////////////
+
+	@RequestMapping(value = "/findId.do", method = RequestMethod.POST)
+	public @ResponseBody String findIdProcess(String member_name, String member_tel) {
+
+		// System.out.println(member_name);
+		// System.out.println(member_tel);
+
+		MemberDTO dto = new MemberDTO();
+		dto.setMember_name(member_name);
+		dto.setMember_tel(member_tel);
+
+		// System.out.println("ì°¾ì€ ì•„ì´ë”” : " + memService.findIdPro(dto));
+		return memberService.findIdPro(dto);
+	}// end findIdProcess()//////////////////////
+
+	// ì´ë©”ì¼ ì „ì†¡ ì²˜ë¦¬ í•´ì£¼ë ¤ë©´
+	/*
+	 * <!-- https://mvnrepository.com/artifact/javax.mail/mail --> <dependency>
+	 * <groupId>javax.mail</groupId> <artifactId>mail</artifactId>
+	 * <version>1.4.7</version> </dependency>
+	 * 
+	 * ì¶”ê°€í•´ì¤˜ì•¼í•œë‹¤.
+	 */
+	@RequestMapping(value = "/findPw.do")
+	public @ResponseBody String findPwProcess(String member_id, String member_tel) {
+
+		// System.out.println(member_id);
+		// System.out.println(member_tel);
+
+		MemberDTO dto = new MemberDTO();
+		dto.setMember_id(member_id);
+		dto.setMember_tel(member_tel);
+
+		// System.out.println(memService.findPwPro(dto));
+		String res = Integer.toString(memberService.findPwPro(dto));
+
+		if (res.equals("1")) {
+			return "1";
+		} else {
+
+			return "0";
+		}
+	}
+
+	@RequestMapping(value = "/sendEmail.do", method = RequestMethod.POST)
+	public @ResponseBody void sendEmailPro(String member_id) {
+		String email = member_id;
+		// ë¹„ë°€ë²ˆí˜¸ ì¬ì„¤ì • ë§í¬.
+		String resetPassworeLink = "http://localhost:8090/gogipam/D" + Util.encryption(member_id) + ".do"; // ì¸ì¦ì½”ë“œê°’ ìƒì„±
+		// System.out.println(resetPassworeLink);
+
+		try {
+			SendEmail.sendMail(email, resetPassworeLink); // ì´ë©”ì¼ ë°œì†¡.
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// http://localhost:8090/myfaq/a.do
+	// http://localhost:8090/myfaq/Dwkdcjfdjd@naver.com.do
+
+	/**
+	 * Pathvariable ì˜ˆì œ
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/{url}")
+	public String page(@PathVariable("url") String url) {
+		String returnUrl = "";
+		System.out.println(url);
+		// decryption í•´ì¤˜ì•¼ í•œë‹¤ëŠ” ì˜ë¯¸ì—ì„œ 'D'ë¥¼ ë¶™ì˜€ìŒ..
+		if (url.charAt(0) == 'D') {
+			return "reset";
+		}
+		return "redirect:/" + url;
+	}
+
+	@RequestMapping(value = "/updatePwd.do", method = RequestMethod.POST)
+	public @ResponseBody String updatePassword(String HEX_member_id, String member_pwd) {
+
+		// System.out.println("start updatePassword() !! ");
+		MemberDTO dto = new MemberDTO();
+
+		// System.out.println(HEX_member_id);
+		String member_id = Util.decryption(HEX_member_id);
+
+		// System.out.println(member_id);
+		dto.setMember_id(member_id);
+		dto.setMember_pwd(member_pwd);
+
+		memberService.updatePwdPro(dto);
+		System.out.println(dto.getMember_pwd());
+		return "ì„±ê³µ";
+	}
+	////////////////////////////////////////////////////////////////// íšŒì› ê´€ë ¨ ë§¤í•‘
+
 	@RequestMapping("/productlist.do")
 	public String productlist(Model model, HttpServletRequest request) {
 		String list_category = (String) request.getParameter("target");
-		
-		if(list_category == null)
-			list_category = ""; // ±×³É ³×ºñ°ÔÀÌ¼Ç ¹Ù¿¡¼­ ¼±ÅÃ½Ã ÆÄ¶ó¹ÌÅÍ°¡ ¾ø´Ù. ±Ùµ¥ nullÀ» ³Ö°ÔµÇ¸é nullpointer ¿À·ù ¹ß»ıÇÏ¹Ç·Î null ´ë½Å "" ´ëÀÔ
-		
-		if(!list_category.equals("all")) {
-			if(list_category.equals(""))
+
+		if (list_category == null)
+			list_category = "";
+
+		if (!list_category.equals("all")) {
+			if (list_category.equals(""))
 				model.addAttribute("plist", listService.listAllProcess());
 			else
 				model.addAttribute("plist", listService.listGroupProcess(list_category));
 		} else
-			model.addAttribute("plist", listService.listAllProcess());			
-		return "productlist";		
-	} // »óÇ° ¸®½ºÆ®	(ÀÌ¹ÌÁö 379 * 479)
-	
+			model.addAttribute("plist", listService.listAllProcess());
+		return "productlist";
+	}
+
 	@RequestMapping("/productdetail.do")
 	public String detail(Model model, HttpServletRequest request) {
 		String namekey = (String) request.getParameter("target");
 		model.addAttribute("plist", listService.listContentProcess(namekey));
 		model.addAttribute("popt", optionService.loadOptionProcess(namekey));
-		
+
 		return "productdetail";
-	} // »ó¼¼ ÆäÀÌÁö
-	
+	}
+	////////////////////////////////////////////////////////////////// ìƒí’ˆ ë¦¬ìŠ¤íŠ¸ ê´€ë ¨ ë§¤í•‘
+
 	@RequestMapping("/order.do")
-	public String order() {
-		return "order";
-	} // ¸ŞÀÎ ÆäÀÌÁö
+	public ModelAndView order() {
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("adrList", addressService.selectAddressProcess("nananan1213@naver.com"));
+		mav.addObject("countAdr", addressService.countAddressProcess("nananan1213@naver.com"));
+		mav.setViewName("order");
+		return mav;
+	}
+
+	@RequestMapping(value = "/adr_insert.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<AddressDTO> orderAddrinsert(AddressDTO adto) {
+		return addressService.insertAddressProcess(adto);
+
+	}
+
+	@RequestMapping(value = "/adr_update.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<AddressDTO> orderAddrupdate(AddressDTO adto) {
+		return addressService.updateAddressProcess(adto);
+
+	}
+	/////////////////////////////////////////////////////////////////// ìƒí’ˆ ì£¼ë¬¸ê´€ë ¨ ë§¤í•‘
+
+	/// ì´ ê°€ê²© ê³„ì‚°í•´ì£¼ëŠ” ë©”ì†Œë“œ
+	public int totalPrice(String member_id) {
+
+		// cartí…Œì´ë¸”ì—ì„œ member_idì»¬ëŸ¼ì˜ ê°’ì´ í˜„ì¬ ë¡œê·¸ì¸ ë˜ì–´ìˆëŠ” íšŒì›ì˜ ì•„ì´ë””ë§Œ ê°€ì ¸ì˜¨ë‹¤.
+		// List<CartDTO>ì— ë„£ì–´ì¤€ë‹¤. (list)
+		List<CartDTO> list = cartService.cartListPro(member_id);
+
+		// í˜„ì¬ íšŒì›ì´ ì¥ë°”êµ¬ë‹ˆì— ë‹´ì€ ìƒí’ˆë“¤ì˜ ì „ì²´ ê°€ê²©ì„ ê³„ì‚°í•œë‹¤. (total_price)
+		int total_price = 0;
+		for (int i = 0; i < list.size(); i++) {
+			int cart_price = list.get(i).getCart_price();
+			int cart_amount = list.get(i).getCart_amount();
+			total_price += (cart_price * cart_amount);
+		}
+
+		return total_price;
+	}
+
+	//////// í˜ì´ì§€ ì¶œë ¥ ê¸°ëŠ¥
+	// list, total_price ë¥¼ ë·°ë¡œ ë³´ë‚´ì£¼ê³  ì²˜ë¦¬í•œë‹¤.
+	@RequestMapping("/cart.do")
+	public ModelAndView cart(HttpSession session) {
+		ModelAndView mav = new ModelAndView();
+		List<CartDTO> list = null;
+
+		// ì„¸ì…˜ì—ì €ì¥ë˜ì–´ ìˆëŠ” ê°’ì„ ê°€ì ¸ì˜¨ë‹¤. (member_id)
+		String member_id = (String) session.getAttribute("member_id");
+
+		// cartí…Œì´ë¸”ì—ì„œ member_idì»¬ëŸ¼ì˜ ê°’ì´ í˜„ì¬ ë¡œê·¸ì¸ ë˜ì–´ìˆëŠ” íšŒì›ì˜ ì•„ì´ë””ë§Œ ê°€ì ¸ì˜¨ë‹¤.
+		// List<CartDTO>ì— ë„£ì–´ì¤€ë‹¤. (list)
+		list = cartService.cartListPro(member_id);
+
+		// í˜„ì¬ íšŒì›ì´ ì¥ë°”êµ¬ë‹ˆì— ë‹´ì€ ìƒí’ˆë“¤ì˜ ì „ì²´ ê°€ê²©ì„ ê³„ì‚°í•œë‹¤. (total_price)
+		int total_price = totalPrice(member_id);
+
+		mav.addObject("list", list);
+		mav.addObject("total_price", total_price);
+
+		mav.setViewName("cart");
+
+		return mav;
+	}// end emptyProcess()/////////////////////////
+
+	//////// - + ëˆŒë €ì„ë•Œ ì´ë²¤íŠ¸ ì²˜ë¦¬
+	@RequestMapping("/amountChange.do")
+	public @ResponseBody List<Object> amountChange(String cart_num, String operation, HttpSession session) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cart_num", cart_num);
+		map.put("operation", operation);
+		CartDTO dto = cartService.updateCartPro(map);
+
+		// ì„¸ì…˜ì—ì €ì¥ë˜ì–´ ìˆëŠ” ê°’ì„ ê°€ì ¸ì˜¨ë‹¤. (member_id)
+		String member_id = (String) session.getAttribute("member_id");
+
+		int total_price = totalPrice(member_id);
+		List<Object> objList = new ArrayList<Object>();
+
+		// listì— dtoì™€ total_priceë¥¼ ì¶”ê°€í•œë‹¤.
+		objList.add(dto);
+		objList.add(total_price);
+
+		// dtoì™€ total_price ë‹´ì€ listë¥¼ ë°˜í™˜í•œë‹¤.
+		return objList;
+	}
+
+	//////// ì‚­ì œ ëˆŒë €ì„ë•Œ ì´ë²¤íŠ¸ ì²˜ë¦¬
+	@RequestMapping("/deleteCart.do")
+	public @ResponseBody List<CartDTO> deleteCart(int cart_num, HttpSession session) {
+		List<CartDTO> list = new ArrayList<CartDTO>();
+		String member_id = (String) session.getAttribute("member_id");
+		list = cartService.deleteCartPro(cart_num, member_id);
+
+		return list;
+	}
+	//////////////////////////////////////////////////////////////////// ì¥ë°”êµ¬ë‹ˆ ê´€ë ¨ ë§¤í•‘
 }

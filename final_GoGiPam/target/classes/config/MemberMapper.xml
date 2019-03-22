@@ -15,4 +15,25 @@
 	<select id="dupTelCheck" parameterType="java.lang.String" resultType="dto.MemberDTO">
 		select member_tel from members where member_tel = #{member_tel}
 	</select>
+	
+	<select id="login" parameterType="dto.MemberDTO" resultType="int">
+		select count(*) from members 
+		where member_id= #{member_id} and member_pwd= #{member_pwd}
+	</select>
+	
+	<select id="findid" parameterType="dto.MemberDTO" resultType="String">
+		select member_id from members
+		where member_name= #{member_name} and member_tel=#{member_tel}
+	</select>
+	
+	<!-- 비밀번호 -->
+	<select id="findpw" parameterType="dto.MemberDTO" resultType="int">
+		select count(*) from members
+		where member_id= #{member_id} and member_tel=#{member_tel}
+	</select>
+	
+	<!-- 새 비밀번호로 수정. -->
+	<update id="updatepw" parameterType="dto.MemberDTO">
+		update members set member_pwd = #{member_pwd} where member_id = #{member_id}
+	</update>
   </mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="qna">
+	<select id="count" parameterType="String" resultType="int">
+		select count(*) from questions where member_id = #{member_id}
+	</select>
+
+	<select id="list" parameterType="Map" resultType="dto.QnaDTO">
+		<![CDATA[
+			select b.* from 
+			(select rownum as rm, a.* from(
+			select * from questions where member_id = #{member_id} order by question_num desc)a)b
+			where b.rm>= #{pdto.startRow} and b.rm<=#{pdto.endRow}
+		]]>
+	</select>
+	
+	<insert id="ins" parameterType="dto.QnaDTO">
+		insert into questions 
+		values(#{member_id}, questions_seq.nextval, #{question_title}, #{question_content},#{upload,jdbcType=VARCHAR}, sysdate, 'no')
+	</insert>
+	
+</mapper>  

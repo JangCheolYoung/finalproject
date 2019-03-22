@@ -157,6 +157,13 @@ $(document).ready(function() {
 		}   		            
 	});	
 	
+	$("#member_tel").keyup(function(event) { // 키다운의 경우 앞 한글자를 못받음
+        if (!(event.keyCode >=37 && event.keyCode<=40)) { // del, backspace 허용하기 위해
+            var inputVal = $(this).val();
+            $(this).val(inputVal.replace(/[^0-9]/gi,'')); // 정규식으로 오직 한글만, 나머지는 공백으로 대체
+        }
+    }); // 처음부터 숫자만 받도록 설정
+	
 	var hasidChk = 0; /* 중복검사를 실행했는지 여부 파악 */
 	$('#dupIdchkBtn').on('click', function() {
 		var member_id = $('#member_id').val();

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cart">
+	<select id="list" parameterType="String" resultType="dto.CartDTO">
+		select * from cart where member_id = #{member_id} order by cart_num
+	</select>
+
+	<update id="update" parameterType="Map">
+		update cart set cart_amount = cart_amount + #{operation} where cart_num = #{cart_num}
+	</update>
+	
+	<select id="item" parameterType="String" resultType="dto.CartDTO">
+		select * from cart where cart_num = #{cart_num}
+	</select>
+	
+	<delete id="del" parameterType="int">
+		delete from cart where cart_num = #{cart_num}
+	</delete>
+	
+	
+
+</mapper>  

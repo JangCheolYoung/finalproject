@@ -28,4 +28,25 @@ public class MemberServiceImp implements MemberService {
 	public MemberDTO dupTelChkProcess(String member_tel) {
 		return mdao.dupTelCheck(member_tel);
 	}
+	
+	@Override
+	public int loginProcess(MemberDTO mdto) {
+		return mdao.loginChk(mdto);
+	}
+
+	@Override
+	public String findIdPro(MemberDTO mdto) {
+		return mdao.findId(mdto);
+	}
+
+	@Override
+	public int findPwPro(MemberDTO mdto) {
+		return mdao.findPw(mdto);
+	}
+	
+	@Override
+	public void updatePwdPro(MemberDTO mdto) {
+		//System.out.println("updqtePwdPro 메소드.");
+		mdao.updatePwd(mdto);
+	}
 }
