@@ -10,4 +10,5 @@ public interface MemberService {
 	public String findIdPro(MemberDTO dto);
 	public int findPwPro(MemberDTO dto);	
 	public void updatePwdPro(MemberDTO dto);
+	public MemberDTO infoUserProcess(String member_id);
 }

@@ -565,7 +565,7 @@ input[id="checkbox1"], input[id="checkbox2"] {
         	</div>
       		</div>
     	</div>
-  </div>
+   </div>
   
 </body>
 </html>

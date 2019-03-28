@@ -8,13 +8,26 @@ public class AddressDTO {
 	private String address_detail;
 	private String receiver_name;
 	private String receiver_tel;
+	private int address_default;
 
+	public AddressDTO() {
+		
+	}
+	
 	public int getAddress_num() {
 		return address_num;
 	}
 
 	public void setAddress_num(int address_num) {
 		this.address_num = address_num;
+	}
+
+	public int getAddress_default() {
+		return address_default;
+	}
+
+	public void setAddress_default(int address_defalut) {
+		this.address_default = address_defalut;
 	}
 
 	public String getMember_id() {

@@ -49,4 +49,9 @@ public class MemberServiceImp implements MemberService {
 		//System.out.println("updqtePwdPro 메소드.");
 		mdao.updatePwd(mdto);
 	}
+
+	@Override
+	public MemberDTO infoUserProcess(String member_id) {
+		return mdao.infoUser(member_id);
+	}
 }

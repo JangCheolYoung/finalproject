@@ -3,22 +3,30 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="address">
-  	<select id="countAddress" parameterType="String" resultType="java.lang.Integer">
-  		select count(*) from addresses where member_id = #{member_id}
-  	</select>
-  
   	<select id="selectAddress" parameterType="String" resultType="dto.AddressDTO">
   		select * from addresses where member_id = #{member_id} order by address_num
   	</select>
   
+  	<select id="viewdefaultAddress" parameterType="String" resultType="dto.AddressDTO">
+  		select * from addresses where member_id = #{member_id} and address_default = 1
+  	</select>
+  
+  	<update id="selectdefault" parameterType="dto.AddressDTO">
+  		update addresses set address_default = 1 where member_id = #{member_id} and address_num = #{address_num}
+  	</update>
+  	
+  	<update id="selectnonDefault" parameterType="dto.AddressDTO">
+  		update addresses set address_default = 0 where member_id = #{member_id}
+  	</update>
+  	
   	<insert id="insertAddress" parameterType="dto.AddressDTO">		
 		insert into addresses
-		values (addresses_seq.nextval, #{member_id}, #{post_num}, #{address}, #{address_detail}, #{receiver_name}, #{receiver_tel})		
+		values (addresses_seq.nextval, #{member_id}, #{post_num}, #{address}, #{address_detail}, #{receiver_name}, #{receiver_tel}, 0)		
 	</insert>
 	
 	<update id="updateAddress" parameterType="dto.AddressDTO">		
 		update addresses set post_num = #{post_num}, 
-			address = #{address}, address_detail = #{address_detail}, receiver_name = #{receiver_name}, receiver_tel = #{receiver_name})
+			address = #{address}, address_detail = #{address_detail}, receiver_name = #{receiver_name}, receiver_tel = #{receiver_tel}
 				where address_num = #{address_num} and member_id = #{member_id}
 	</update>
 	

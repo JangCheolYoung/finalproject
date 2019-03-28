@@ -153,6 +153,7 @@
 			<mvc:mapping path="/faqPage.do" />
 			<mvc:mapping path="/cart.do" />
 			<mvc:mapping path="/qnaPage.do" />
+			<mvc:mapping path="/order.do" />
 			<bean class="interceptor.LoginInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>

@@ -50,4 +50,24 @@ public class AddressServiceImp implements AddressService {
 		return adao.countAddress(member_id);
 	}
 
+	@Override
+	public List<AddressDTO> selectAccountAddressProcess(AddressDTO adto) {
+		return adao.selectAccountAddress(adto);
+	}
+
+	@Override
+	public void selectdefaultProcess(AddressDTO adto) {
+		adao.selectdefault(adto);		
+	}
+
+	@Override
+	public void selectnondefaultProcess(AddressDTO adto) {
+		adao.selectnondefault(adto);		
+	}
+
+	@Override
+	public AddressDTO viewdefaultAddressProcess(String member_id) {
+		return adao.viewdefaultAddress(member_id);
+	}
+
 }

@@ -54,4 +54,9 @@ public class MemberDAOImp implements MemberDAO {
 		sqlSession.update("member.updatepw", mdto);
 	}
 
+	@Override
+	public MemberDTO infoUser(String member_id) {
+		return sqlSession.selectOne("member.infoUser", member_id);
+	}
+
 }

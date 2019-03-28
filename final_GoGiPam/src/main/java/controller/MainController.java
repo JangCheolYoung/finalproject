@@ -538,10 +538,11 @@ public class MainController {
 	////////////////////////////////////////////////////////////////// 상품 리스트 관련 매핑
 
 	@RequestMapping("/order.do")
-	public ModelAndView order() {
+	public ModelAndView order(HttpSession session) {
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("adrList", addressService.selectAddressProcess("nananan1213@naver.com"));
-		mav.addObject("countAdr", addressService.countAddressProcess("nananan1213@naver.com"));
+		mav.addObject("adrList", addressService.selectAddressProcess((String) session.getAttribute("member_id")));
+		mav.addObject("defaultAdr", addressService.viewdefaultAddressProcess((String) session.getAttribute("member_id")));
+		mav.addObject("infoUser", memberService.infoUserProcess((String) session.getAttribute("member_id")));
 		mav.setViewName("order");
 		return mav;
 	}
@@ -558,6 +559,20 @@ public class MainController {
 	public List<AddressDTO> orderAddrupdate(AddressDTO adto) {
 		return addressService.updateAddressProcess(adto);
 
+	}
+	
+	@RequestMapping(value = "/adr_delete.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<AddressDTO> orderAddrdelete(AddressDTO adto) {
+		return addressService.deleteAddressProcess(adto);
+	}
+	
+	@RequestMapping(value = "/adr_select.do", method = RequestMethod.POST)
+	@ResponseBody
+	public AddressDTO orderAddrSelect(AddressDTO adto, HttpSession session) {
+		addressService.selectnondefaultProcess(adto);
+		addressService.selectdefaultProcess(adto);
+		return addressService.viewdefaultAddressProcess((String) session.getAttribute("member_id"));
 	}
 	/////////////////////////////////////////////////////////////////// 상품 주문관련 매핑
 

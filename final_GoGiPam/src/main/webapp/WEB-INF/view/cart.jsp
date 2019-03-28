@@ -142,16 +142,7 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 			
 			
 		});
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		$('.order_btn').on('click', function(){
 			alert('주문 페이지로 이동.');
 			// 해야 할 일 : 주문 페이지로 이동하도록 경로 추가.
