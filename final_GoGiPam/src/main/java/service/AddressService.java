@@ -5,9 +5,7 @@ import java.util.List;
 import dto.AddressDTO;
 
 public interface AddressService {
-	public int countAddressProcess(String member_id);
 	public List<AddressDTO> selectAddressProcess(String member_id);
-	public List<AddressDTO> selectAccountAddressProcess(AddressDTO adto);
 	public List<AddressDTO> insertAddressProcess(AddressDTO adto);
 	public List<AddressDTO> updateAddressProcess(AddressDTO adto);
 	public List<AddressDTO> deleteAddressProcess(AddressDTO adto);

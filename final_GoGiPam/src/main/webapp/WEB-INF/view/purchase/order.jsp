@@ -419,14 +419,14 @@ $(document).ready(function () {
 	 $("#receiver_tel").keyup(function(event) { // 키다운의 경우 앞 한글자를 못받음
          if (!(event.keyCode >=37 && event.keyCode<=40)) { // del, backspace 허용하기 위해
              var inputVal = $(this).val();
-             $(this).val(inputVal.replace(/[^0-9]/gi,'')); // 정규식으로 오직 한글만, 나머지는 공백으로 대체
+             $(this).val(inputVal.replace(/[^0-9]/gi,''));
          }
      });
 	
 	 $("#alter_receiver_tel").keyup(function(event) { // 키다운의 경우 앞 한글자를 못받음
          if (!(event.keyCode >=37 && event.keyCode<=40)) { // del, backspace 허용하기 위해
              var inputVal = $(this).val();
-             $(this).val(inputVal.replace(/[^0-9]/gi,'')); // 정규식으로 오직 한글만, 나머지는 공백으로 대체
+             $(this).val(inputVal.replace(/[^0-9]/gi,''));
          }
      });
 	/// 연락처 입력 받는 곳 숫자만 받을 수 있도록 처리
@@ -695,14 +695,14 @@ $(document).ready(function () {
 </head>
 <body>
 <div id="order_wrap" style="width: 1180px; height: 910px; margin-top: 30px; margin-left: auto; margin-right: auto;">
-	<div id="order_header" style="width: 100%; text-align: center; font-size: 38px; line-height: .80;">
+	<div id="order_header" style="text-align: center; font-size: 38px; line-height: .80;">
 	주문하기
 	</div>
 	
-	<div id="order_status" style="width: 1180px; height: 120px; margin-top: 43px; background-color: blue;">
+	<div id="order_status" style="width: 128px; height: 120px; margin-top: 43px; background: url(images/purchase/moving.png); margin-left: auto; margin-right: auto">
 	</div>
 	
-	<div id="order_address_wrap" style="margin-top: 103px; width: 980px; margin-left: auto; margin-right: auto;">
+	<div id="order_address_wrap" style="margin-top: 43px; width: 980px; margin-left: auto; margin-right: auto;">
 		<div class="order_address_title">
 			보내시는 분
 		</div>

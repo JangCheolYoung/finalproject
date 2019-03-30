@@ -15,11 +15,19 @@
 <!-- jQuery library -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+</script>
+
 
 <link rel="stylesheet" href="css/basic.css">
 <link rel="stylesheet" href="css/navbar.css">
 <link rel="stylesheet" href="css/list.css">
 <style>
+
+body {
+   padding-right: 0 !important;
+}
 
 header {
    width: 100%;
@@ -29,7 +37,8 @@ header {
 
 section {
    background-color: white;
-   width: 100%;
+   min-width: 100%;
+   height: 100%;
 }
 
 footer {
@@ -49,19 +58,16 @@ footer {
          <tiles:insertAttribute name="header" />
       </p>
    </header>
-<div>
-   <section>
-      <p>
+   <section style="width: 100%; overflow-x:hidden; overflow:hidden; scroll:no">
+      <div>
          <tiles:insertAttribute name="body" />
-      </p>
+      </div>
    </section>
-</div>
-<div>
+
    <footer>
-      <p>
+      <div>
          <tiles:insertAttribute name="footer" />
-      </p>
+      </div>
    </footer>
-</div>
 </body>
 </html>

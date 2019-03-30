@@ -20,8 +20,8 @@ public class ListServiceImp implements ListService {
 	}
 
 	@Override
-	public ItemDTO listContentProcess(String item_namekey) {
-		return ldao.listContent(item_namekey);
+	public ItemDTO listContentProcess(String item_key) {
+		return ldao.listContent(item_key);
 	}
 
 	@Override

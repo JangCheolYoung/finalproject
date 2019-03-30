@@ -150,9 +150,7 @@ input::placeholder{
       </div>
       
     </div>
-  </div>sss
-  
-	
+  </div>	
 		
 <!-- 세션값 확인해서 없으면 인터럽트로 로그인페이지로 이동시켜주고 보여줄  Modal -->
 

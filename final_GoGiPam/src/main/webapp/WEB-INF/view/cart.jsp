@@ -14,14 +14,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
 <style type="text/css">
-@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
-@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-jp.css);
-* {	
-	font-family: 'Spoqa Han Sans', 'Spoqa Han Sans', 'Sans-serif';
-	margin: 0;
-	padding: 0;
-	outline: 0;
-}
 
 .has_items{
 width: 1180px; 
@@ -255,7 +247,7 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 	<c:choose>
 		<c:when test="${!empty list}">
 		<!-- 장바구니에 1개 이상 들어있을 때 생성해준다.-->
-			<div class="has_items">
+			<div class="has_items" style="height: 100%;">
 				<!-- 장바구니 텍스트. -->
 				<div style="height: 30px; font-size: 32px; text-align: center;">장바구니</div>
 				
@@ -339,22 +331,10 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 				</div>
 			</div>
 		</c:when>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+			
 		<c:when test="${empty list}">
 					<!-- 장바구니 비어있을때  -->
-			<div class="no_items" style="width: 1180px; margin-left: auto; margin-right: auto; margin-top: 100px; overflow: auto;">
+			<div class="no_items" style="width: 1180px; height: 1000px; margin-left: auto; margin-right: auto; margin-top: 100px; overflow: auto;">
 				<div style="height: 30px; font-size: 32px; text-align: center;">장바구니</div>
 				<div style="margin-top: 50px; overflow: auto; border-top: 1px solid black;">
 					<div style="text-align: center; font-size: 40px; margin-top: 80px; height: 30px; color:#e1dedf;">장바구니에 담은 상품이 없습니다.</div>

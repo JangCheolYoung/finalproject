@@ -46,16 +46,6 @@ public class AddressDAOImp implements AddressDAO {
 	}
 
 	@Override
-	public int countAddress(String member_id) {
-		return sqlSession.selectOne("address.countAddress", member_id);
-	}
-
-	@Override
-	public List<AddressDTO> selectAccountAddress(AddressDTO adto) {
-		return sqlSession.selectOne("address.selectAccountAddress", adto);
-	}
-
-	@Override
 	public void selectdefault(AddressDTO adto) {
 		sqlSession.update("address.selectdefault", adto);
 		

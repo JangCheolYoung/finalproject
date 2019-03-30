@@ -32,6 +32,7 @@
 			<value>classpath:config/CartMapper.xml</value>
 			<value>classpath:config/FaqMapper.xml</value>
 			<value>classpath:config/QnaMapper.xml</value>
+			<value>classpath:config/CardMapper.xml</value>
 		</list>
 	</property>
 	</bean>
@@ -91,6 +92,10 @@
 	<bean id="qdao" class="dao.QnaDAOImp">
 		<property name="sqlSession" ref="sqlSession" />
 	</bean>
+	
+	<bean id="cardDao" class="dao.CardDAOImp">
+		<property name="sqlSession" ref="sqlSession" />
+	</bean>
 
 	<!-- [8] Service 빈 선언 -->
 	<bean id="memService" class="service.MemberServiceImp">
@@ -116,8 +121,13 @@
 	<bean id="cartService" class="service.CartServiceImp">
 		<property name="cdao" ref="cdao"></property>
 	</bean>
+	
 	<bean id="qnaService" class="service.QnaServiceImp">
 		<property name="qdao" ref="qdao"></property>
+	</bean>
+	
+	<bean id="cardService" class="service.CardServiceImp">
+		<property name="cardDao" ref="cardDao"></property>
 	</bean>
 	
 	<!-- 파일 업로드 시작 -->
@@ -144,6 +154,7 @@
 		<property name="addressService" ref="addressService"></property>
 		<property name="faqService" ref="faqService"></property>
 		<property name="cartService" ref="cartService"></property>
+		<property name="cardService" ref="cardService"></property>
 		<property name="qnaService" ref="qnaService"></property>
 	</bean>
 	
@@ -154,6 +165,7 @@
 			<mvc:mapping path="/cart.do" />
 			<mvc:mapping path="/qnaPage.do" />
 			<mvc:mapping path="/order.do" />
+			<mvc:mapping path="/purchase.do" />
 			<bean class="interceptor.LoginInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>

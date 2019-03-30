@@ -1,16 +1,17 @@
 package dto;
 
 public class OptionDTO {
-	private String list_title;
+	private String item_title;
 	private String option_name;
-	private String list_namekey;
+	private String item_key;
+	private String option_key;
 
-	public String getList_title() {
-		return list_title;
+	public String getItem_title() {
+		return item_title;
 	}
 
-	public void setList_title(String list_title) {
-		this.list_title = list_title;
+	public void setItem_title(String item_title) {
+		this.item_title = item_title;
 	}
 
 	public String getOption_name() {
@@ -21,12 +22,20 @@ public class OptionDTO {
 		this.option_name = option_name;
 	}
 
-	public String getList_namekey() {
-		return list_namekey;
+	public String getOption_key() {
+		return option_key;
 	}
 
-	public void setList_namekey(String list_namekey) {
-		this.list_namekey = list_namekey;
+	public void setOption_key(String option_key) {
+		this.option_key = option_key;
+	}
+
+	public String getItem_key() {
+		return item_key;
+	}
+
+	public void setItem_key(String item_key) {
+		this.item_key = item_key;
 	}
 
 	

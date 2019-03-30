@@ -9,8 +9,8 @@
 <style type="text/css">
 #agree_wrap {
 	width: 1180px;
-	height: 1000px;
-	margin-top: 100px;
+	height: 100%;
+	margin-top: 30px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -19,7 +19,7 @@
 	width: 1180px;
 	height: 40px;
 	text-align: center;
-	font-size: 32px;
+	font-size: 38px;
 }
 
 #agree_header_img {
@@ -28,7 +28,7 @@
 	margin-left: auto;
 	margin-right: auto;
 	background: url(images/agree.png);
-	margin-top: 20px;
+	margin-top: 43px;
 }
 
 #agree_check1, #agree_check2 {

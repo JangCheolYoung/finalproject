@@ -5,9 +5,7 @@ import java.util.List;
 import dto.AddressDTO;
 
 public interface AddressDAO {
-	public int countAddress(String member_id);
 	public List<AddressDTO> selectAddress(String member_id);
-	public List<AddressDTO> selectAccountAddress(AddressDTO adto);
 	public void selectdefault(AddressDTO adto);
 	public void selectnondefault(AddressDTO adto);
 	public void insertAddress(AddressDTO adto);

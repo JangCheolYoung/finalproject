@@ -1,3 +1,4 @@
+<%@page import="org.springframework.web.context.request.SessionScope"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
@@ -50,6 +51,25 @@
 			$('#d_dropContent').attr('class', 'd_off');
 		});
 		/* 옵션 선택 */
+		
+		var cart_amount = parseInt($('#d_amount').text());
+		var cart_price = parseInt($('#detail_price').text().split('\')[1]);
+		var member_id = '<%=(String)session.getAttribute("member_id")%>';
+		
+		$('#detail_cart').on('click', function() {
+			$.ajax({
+				type: "POST",
+				url: "insert_cart.do",
+				data: {
+					"option_key" : option_key,
+					"cart_amount" : cart_amount,
+					"member_id" : member_id,
+					"cart_price" : 
+					
+				},
+			});
+		});
+		// 장바구니로 데이터 넘긴 후 테이블에 기록함
 		
 	})
 </script>
@@ -140,11 +160,15 @@
 					</div>
 										
 				<div id="detail_button" style="width: 380px; height: 60px; margin-top: 40px; overflow: auto;">
-					<div id="detail_direct" style="background-color: gray; display: inline-block; width: 180px; height: 60px; font-size: 20px; font-weight: bold; line-height: 60px; text-align: center; color: white; float: left; cursor: pointer">
+					<div id="detail_direct" style="background-color: gray; display: inline-block; 
+						width: 180px; height: 60px; font-size: 20px; font-weight: bold; line-height: 60px; 
+						text-align: center; color: white; float: left; cursor: pointer">
 						바로구매
 					</div>
 					
-					<div id="detail_cart" style="background-color: red; margin-left: 20px; display: inline-block; width: 180px; line-height: 60px; font-size: 20px; font-weight: bold; height: 60px; text-align: center; color: white; float: left; cursor: pointer">
+					<div id="detail_cart" style="background-color: red; margin-left: 20px; display: inline-block; 
+						width: 180px; line-height: 60px; font-size: 20px; font-weight: bold; height: 60px; 
+						text-align: center; color: white; float: left; cursor: pointer">
 						장바구니
 					</div>
 				</div>

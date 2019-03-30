@@ -18,8 +18,18 @@ public class OptionServiceImp implements OptionService {
 	}
 
 	@Override
-	public List<OptionDTO> loadOptionProcess(String item_title) {
-		return odao.loadOption(item_title);
+	public List<OptionDTO> loadFullOptionProcess(String item_key) {
+		return odao.loadFullOption(item_key);
+	}
+
+	@Override
+	public String loadOptionKeyProcess(OptionDTO odto) {
+		return odao.loadOptionKey(odto);
+	}
+
+	@Override
+	public String loadOptionProcess(String option_key) {
+		return odao.loadOption(option_key);
 	}
 	
 }

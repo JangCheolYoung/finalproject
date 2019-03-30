@@ -21,8 +21,8 @@ public class ListDAOImp implements ListDAO {
 	}
 
 	@Override
-	public ItemDTO listContent(String item_namekey) {
-		return sqlSession.selectOne("list.contents", item_namekey);
+	public ItemDTO listContent(String item_key) {
+		return sqlSession.selectOne("list.contents", item_key);
 	}
 
 	@Override

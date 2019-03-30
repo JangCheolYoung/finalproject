@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="card">
+
+	<select id="selectCard" parameterType="dto.CardDTO"
+		resultType="dto.CardDTO">
+		select * from card where member_id = #{member_id} order by card_num_seq
+	</select>
+	
+	<select id="viewDefaultCard" parameterType="String" resultType="dto.CardDTO">
+  		select * from card where member_id = #{member_id} and card_default = 1
+  	</select>
+	
+	<insert id="insertCard" parameterType="dto.CardDTO">
+		insert into card values(card_seq.nextval, #{card_title},
+		#{card_number}, #{card_password}, #{card_exp_month}, #{card_exp_year}, #{member_id},
+		#{card_birthday}, 0)
+	</insert>
+
+	<delete id="deleteCard" parameterType="dto.CardDTO">
+		delete from card where member_id = #{member_id} and card_num_seq =
+		#{card_num_seq}
+	</delete>
+
+	<update id="selectDefault" parameterType="dto.CardDTO">
+		update card set card_default = 1 where member_id = #{member_id} and
+		card_num_seq = #{card_num_seq}
+	</update>
+
+	<update id="selectnonDefault" parameterType="dto.CardDTO">
+		update card set card_default = 0 where member_id = #{member_id}
+	</update>
+
+</mapper>
+  

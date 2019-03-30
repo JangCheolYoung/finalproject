@@ -21,8 +21,18 @@ private SqlSessionTemplate sqlSession;
 	}
 	
 	@Override
-	public List<OptionDTO> loadOption(String item_namekey) {
-		return sqlSession.selectList("option.loadOption", item_namekey);
+	public List<OptionDTO> loadFullOption(String item_key) {
+		return sqlSession.selectList("option.loadFullOption", item_key);
+	}
+
+	@Override
+	public String loadOptionKey(OptionDTO odto) {
+		return sqlSession.selectOne("option.loadOptionKey", odto);
+	}
+
+	@Override
+	public String loadOption(String option_key) {
+		return sqlSession.selectOne("option.loadOption", option_key);
 	}
 
 }

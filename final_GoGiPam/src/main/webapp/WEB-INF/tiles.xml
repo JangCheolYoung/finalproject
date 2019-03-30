@@ -83,4 +83,9 @@
 					   value="/WEB-INF/view/login.jsp"></put-attribute>
 	</definition>
 	
+	<!-- login 페이지 타일 설정 -->
+	<definition name = "purchase" extends = "main">
+		<put-attribute name="body"
+					   value="/WEB-INF/view/purchase/purchase.jsp"></put-attribute>
+	</definition>
 </tiles-definitions>     

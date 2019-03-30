@@ -8,14 +8,14 @@ public class ItemDTO {
 	private String item_category;
 	private String item_unit;
 	private String item_stock;
-	private String item_namekey;
+	private String item_key;
 
 	public String getitem_namekey() {
-		return item_namekey;
+		return item_key;
 	}
 
 	public void setitem_namekey(String item_namekey) {
-		this.item_namekey = item_namekey;
+		this.item_key = item_namekey;
 	}
 
 	public String getitem_unit() {

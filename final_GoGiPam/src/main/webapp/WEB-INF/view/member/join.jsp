@@ -10,14 +10,14 @@
 <style type="text/css">
 #join_wrap {
 	width: 1180px;
-	margin-top: 100px;
+	margin-top: 30px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
 #join_header {
 	width: 1180px;
-	font-size: 32px;
+	font-size: 38px;
 	text-align: center;
 	height: 40px;
 }
@@ -28,7 +28,7 @@
 	margin-left: auto;
 	margin-right: auto;
 	background: url(images/join.png);
-	margin-top: 20px;
+	margin-top: 43px;
 }
 
 .join_input {

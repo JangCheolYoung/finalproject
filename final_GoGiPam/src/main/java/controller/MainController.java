@@ -35,6 +35,7 @@ import dto.QnaPageDTO;
 import email.SendEmail;
 import email.Util;
 import service.AddressService;
+import service.CardService;
 import service.CartService;
 import service.FaqService;
 import service.ListService;
@@ -49,6 +50,7 @@ import service.QnaService;
 //http://localhost:8090/gogipam/productlist.do
 //http://localhost:8090/gogipam/productdetail.do
 //http://localhost:8090/gogipam/order.do
+//http://localhost:8090/gogipam/purchase.do
 
 //http://localhost:8090/gogipam/login.do
 //http://localhost:8090/gogipam/logout.do
@@ -67,6 +69,8 @@ public class MainController {
 	private FaqService faqService;
 	private CartService cartService;
 	private QnaService qnaService;
+	private CardService cardService;
+
 
 	///////////////////////////////////////////////// Service 선언
 	public MainController() {
@@ -98,6 +102,10 @@ public class MainController {
 	
 	public void setQnaService(QnaService qnaService) {
 		this.qnaService = qnaService;
+	}
+	
+	public void setCardService(CardService cardService) {
+		this.cardService = cardService;
 	}
 	///////////////////////////////////////////////////// setService 선언
 
@@ -535,6 +543,7 @@ public class MainController {
 
 		return "productdetail";
 	}
+	
 	////////////////////////////////////////////////////////////////// 상품 리스트 관련 매핑
 
 	@RequestMapping("/order.do")
@@ -573,6 +582,11 @@ public class MainController {
 		addressService.selectnondefaultProcess(adto);
 		addressService.selectdefaultProcess(adto);
 		return addressService.viewdefaultAddressProcess((String) session.getAttribute("member_id"));
+	}
+	
+	@RequestMapping("/purchase.do")
+	public String purchase() {
+		return "purchase";
 	}
 	/////////////////////////////////////////////////////////////////// 상품 주문관련 매핑
 

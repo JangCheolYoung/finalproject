@@ -2,8 +2,10 @@ package dto;
 
 public class CartDTO {
 	private int cart_num;
-	private int item_num;
-	private int option_num;
+//	private int item_num;
+	private String item_key;
+//	private int option_num;
+	private String option_key;
 	private String member_id;
 	private int cart_amount;
 	private int cart_price;
@@ -20,20 +22,20 @@ public class CartDTO {
 		this.cart_num = cart_num;
 	}
 
-	public int getItem_num() {
-		return item_num;
+	public String getItem_key() {
+		return item_key;
 	}
 
-	public void setItem_num(int item_num) {
-		this.item_num = item_num;
+	public void setItem_num(String item_key) {
+		this.item_key = item_key;
 	}
 
-	public int getOption_num() {
-		return option_num;
+	public String getOption_key() {
+		return option_key;
 	}
 
-	public void setOption_num(int option_num) {
-		this.option_num = option_num;
+	public void setOption_key(String option_key) {
+		this.option_key = option_key;
 	}
 
 	public String getMember_id() {

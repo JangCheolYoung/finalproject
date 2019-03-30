@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="list">
 		<select id="contents" parameterType="String" resultType="dto.ItemDTO">
-			select * from items where item_namekey = #{item_namekey}
+			select * from items where item_key = #{item_key}
 		</select>
 		
 		<select id="list_group" parameterType="String" resultType="dto.ItemDTO">
