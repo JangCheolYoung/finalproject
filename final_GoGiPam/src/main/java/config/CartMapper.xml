@@ -21,8 +21,7 @@
 	</delete>
 	
 	<insert id="insert" parameterType="dto.CartDTO">
-		insert into cart values(cart_seq.nextval, #{item_key},
-		 #{option_key}, #{member_id}, #{cart_amount}, #{cart_price})
+		insert into cart values(cart_seq.nextval, #{item_key}, #{option_key}, #{member_id}, #{cart_amount}, #{cart_price})
 	</insert>
 
 </mapper>  

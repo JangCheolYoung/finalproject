@@ -58,7 +58,7 @@ footer {
          <tiles:insertAttribute name="header" />
       </p>
    </header>
-   <section style="width: 100%; overflow-x:hidden; overflow:hidden; scroll:no">
+   <section>
       <div>
          <tiles:insertAttribute name="body" />
       </div>

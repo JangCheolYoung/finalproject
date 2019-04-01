@@ -140,7 +140,7 @@ $(document).ready(function() {
 	<div id=list_print>
 	<c:forEach items="${plist}" var="plist">
 		<div class="list_itembox">
-			<div class="list_pic" id="${plist.item_namekey}">
+			<div class="list_pic" id="${plist.item_key}">
 				<img src="${plist.item_thumbnail}" style="width: 320px; height: 320px; object-fit: fit; margin-left: 30px; margin-top: 80px;"/>
 			</div>
 			<div class="list_name">

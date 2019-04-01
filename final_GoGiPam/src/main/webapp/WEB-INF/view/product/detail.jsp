@@ -32,7 +32,8 @@
 		});
 		/* +, - 버튼 */
 		
-		$('#drop_defalut').text($('#opt').text());
+		$('#drop_default').text($('#opt').text().split(',')[0]);
+		$('#drop_key').text($('#opt').text().split(',')[1].trim());
 		/* 기본 옵션 불러오기 */
 		
 		$('#dropBtn').on('click', function() {
@@ -41,36 +42,41 @@
 			else
 				$('#d_dropContent').attr('class', 'd_off');
 		});
-		/* 옵션 선택을 하지않고 또 버튼 눌렀을 경우 그냥 드롭다운 목록을 닫아버림 */
+		/* 옵션 선택을 하지않고 버튼 눌렀을 경우 그냥 드롭다운 목록을 닫아버림 */
 		
-		$('.optlist').on('click', function(){
+		$('.optlist').on('click', function() {
 			$('.optlist active').attr('class', 'optlist');
 			$(this).attr('class', 'optlist active');
 			
-			$('#drop_defalut').text($(this).text());
+			$('#drop_default').text($(this).text().split(',')[0]);
+			$('#drop_key').text($(this).text().split(',')[1]);
 			$('#d_dropContent').attr('class', 'd_off');
 		});
 		/* 옵션 선택 */
 		
-		var cart_amount = parseInt($('#d_amount').text());
-		var cart_price = parseInt($('#detail_price').text().split('\')[1]);
-		var member_id = '<%=(String)session.getAttribute("member_id")%>';
-		
 		$('#detail_cart').on('click', function() {
+			var member_id = '<%= (String) session.getAttribute("member_id")%>';
+			//alert(member_id);
+			var item_key = '${plist.item_key}';
+			var option_key = $('#drop_key').text();
+			var cart_amount = parseInt($('#d_amount').text());
+			var cart_price = ${plist.item_price};
+			
 			$.ajax({
 				type: "POST",
 				url: "insert_cart.do",
 				data: {
-					"option_key" : option_key,
-					"cart_amount" : cart_amount,
-					"member_id" : member_id,
-					"cart_price" : 
-					
+					'member_id' : member_id,
+					'item_key' : item_key,
+					'option_key' : option_key,
+					'cart_amount' : cart_amount,
+					'cart_price' : cart_price
 				},
+				success: function() {
+					$('#cartModal1').modal();
+				}
 			});
-		});
-		// 장바구니로 데이터 넘긴 후 테이블에 기록함
-		
+		})
 	})
 </script>
 
@@ -102,7 +108,7 @@
 				<img src="${plist.item_thumbnail}" style="float: left; width: 550px; height: 550px;" alt="">
 				<div id="detail_product" style="width: 380px; display: table-cell; 
 					vertical-align: middle; margin-left: 123px; margin-top: 65px;"> 
-					
+					<div id="detail_itemkey" style="display: none">${plist.item_key}</div>
 					<div id="detail_name" style="font-size: 28px; font-weight: bold; color: black; width: 380px; line-height: 1.5;">
 						${plist.item_title}
 					</div>
@@ -145,13 +151,14 @@
 						</div>
 						<div id="detail_dropdown" style="border: 1px solid black; height: 50px; margin-left: 26px; position: absolute; display: inline-block;">
 							<button id="dropBtn" style="width: 316px; height: 48px; font-size:18px; background-color: white; border: none; color: black; cursor: pointer;">
-								<span id="drop_defalut"></span>
+								<span id="drop_default"></span>
+								<span id="drop_key" style="display: none"></span>
 							</button>
 							
 							<div id=d_dropContent class="d_off" style="position: absolute; overflow: auto; margin-top: -2px; margin-left: -1px; border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black;">
 								<c:forEach items="${popt}" var="optlist">
 									<div id="opt" class="optlist active" style="width: 316px; height: 48px; font-size:18px; background-color: white; border: none; color: black; cursor: pointer; text-align: center; line-height: 48px;">
-										${optlist.option_name}
+										${optlist.option_name}<span style="display: none">,${optlist.option_key}</span>
 									</div>
 								</c:forEach>
 							</div>
@@ -177,5 +184,21 @@
 			</div>
 		</div>
 	</div>
+
+<!-- 장바구니에 담겼다는 모달 출력 -->	
+<div class="modal modal-center fade" id="cartModal1" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">상품이 장바구니에 담겼습니다.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>	
 </body>
 </html>

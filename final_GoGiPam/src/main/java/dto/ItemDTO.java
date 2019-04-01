@@ -10,68 +10,68 @@ public class ItemDTO {
 	private String item_stock;
 	private String item_key;
 
-	public String getitem_namekey() {
-		return item_key;
-	}
-
-	public void setitem_namekey(String item_namekey) {
-		this.item_key = item_namekey;
-	}
-
-	public String getitem_unit() {
-		return item_unit;
-	}
-
-	public void setitem_unit(String item_unit) {
-		this.item_unit = item_unit;
-	}
-
-	public String getitem_stock() {
-		return item_stock;
-	}
-
-	public void setitem_stock(String item_stock) {
-		this.item_stock = item_stock;
-	}
-
-	public String getitem_title() {
+	public String getItem_title() {
 		return item_title;
 	}
 
-	public void setitem_title(String item_title) {
+	public void setItem_title(String item_title) {
 		this.item_title = item_title;
 	}
 
-	public int getitem_price() {
+	public int getItem_price() {
 		return item_price;
 	}
 
-	public void setitem_price(int item_price) {
+	public void setItem_price(int item_price) {
 		this.item_price = item_price;
 	}
 
-	public String getitem_addition() {
+	public String getItem_addition() {
 		return item_addition;
 	}
 
-	public void setitem_addition(String item_addtion) {
-		this.item_addition = item_addtion;
+	public void setItem_addition(String item_addition) {
+		this.item_addition = item_addition;
 	}
 
-	public String getitem_thumbnail() {
+	public String getItem_thumbnail() {
 		return item_thumbnail;
 	}
 
-	public void setitem_thumbnail(String item_thumbnail) {
+	public void setItem_thumbnail(String item_thumbnail) {
 		this.item_thumbnail = item_thumbnail;
 	}
 
-	public String getitem_category() {
+	public String getItem_category() {
 		return item_category;
 	}
 
-	public void setitem_category(String item_category) {
+	public void setItem_category(String item_category) {
 		this.item_category = item_category;
+	}
+
+	public String getItem_unit() {
+		return item_unit;
+	}
+
+	public void setItem_unit(String item_unit) {
+		this.item_unit = item_unit;
+	}
+
+	public String getItem_stock() {
+		return item_stock;
+	}
+
+	public void setItem_stock(String item_stock) {
+		this.item_stock = item_stock;
+	}
+
+	public String getItem_key() {
+		return item_key;
+	}
+
+	public void setItem_key(String item_key) {
+		this.item_key = item_key;
 	}
 
 }

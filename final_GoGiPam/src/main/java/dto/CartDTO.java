@@ -26,7 +26,7 @@ public class CartDTO {
 		return item_key;
 	}
 
-	public void setItem_num(String item_key) {
+	public void setItem_key(String item_key) {
 		this.item_key = item_key;
 	}
 

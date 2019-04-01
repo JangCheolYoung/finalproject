@@ -6,7 +6,8 @@ import java.util.Map;
 import dto.CartDTO;
 
 public interface CartService {
-	public List<CartDTO> cartListPro(String member_id);
-	public CartDTO updateCartPro(Map<String, Object> map);
-	public List<CartDTO> deleteCartPro(int cart_num, String member_id);
+	public List<CartDTO> cartListProcess(String member_id);
+	public CartDTO updateCartProcess(Map<String, Object> map);
+	public List<CartDTO> deleteCartProcess(int cart_num, String member_id);
+	public List<CartDTO> insertCartProcess(CartDTO cdto);
 }

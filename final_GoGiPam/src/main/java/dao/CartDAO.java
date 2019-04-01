@@ -13,4 +13,7 @@ public interface CartDAO {
 	
 	// cart에서 데이터 삭제해주고 리스트 반환.
 	public List<CartDTO> deleteCart(int cart_num, String member_id);
+	
+	// cart에 insert
+	public List<CartDTO> insertCart(CartDTO cdto);
 }

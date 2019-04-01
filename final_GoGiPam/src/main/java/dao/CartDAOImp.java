@@ -34,4 +34,10 @@ public class CartDAOImp implements CartDAO {
 		return sqlSession.selectList("cart.list", member_id);
 	}
 
+	@Override
+	public List<CartDTO> insertCart(CartDTO cdto) {
+		sqlSession.insert("cart.insert", cdto);
+		return sqlSession.selectList("cart.list", cdto.getMember_id());
+	}
+
 }

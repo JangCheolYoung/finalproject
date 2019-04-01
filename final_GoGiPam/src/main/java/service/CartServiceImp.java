@@ -17,18 +17,23 @@ public class CartServiceImp implements CartService {
 	}
 
 	@Override
-	public List<CartDTO> cartListPro(String member_id) {
+	public List<CartDTO> cartListProcess(String member_id) {
 		return cdao.selectCart(member_id);
 	}
 
 	@Override
-	public CartDTO updateCartPro(Map<String, Object> map) {
+	public CartDTO updateCartProcess(Map<String, Object> map) {
 		return cdao.updateCartAmount(map);
 	}
 
 	@Override
-	public List<CartDTO> deleteCartPro(int cart_num, String member_id) {
+	public List<CartDTO> deleteCartProcess(int cart_num, String member_id) {
 		return cdao.deleteCart(cart_num, member_id);
+	}
+
+	@Override
+	public List<CartDTO> insertCartProcess(CartDTO cdto) {
+		return cdao.insertCart(cdto);
 	}
 
 }

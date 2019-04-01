@@ -29,7 +29,9 @@ import org.springframework.web.servlet.ModelAndView;
 import dto.AddressDTO;
 import dto.CartDTO;
 import dto.FaqDTO;
+import dto.ItemDTO;
 import dto.MemberDTO;
+import dto.OptionDTO;
 import dto.QnaDTO;
 import dto.QnaPageDTO;
 import email.SendEmail;
@@ -537,13 +539,17 @@ public class MainController {
 
 	@RequestMapping("/productdetail.do")
 	public String detail(Model model, HttpServletRequest request) {
-		String namekey = (String) request.getParameter("target");
-		model.addAttribute("plist", listService.listContentProcess(namekey));
-		model.addAttribute("popt", optionService.loadOptionProcess(namekey));
-
+		String item_key = (String) request.getParameter("target");
+		model.addAttribute("plist", listService.listContentProcess(item_key));
+		model.addAttribute("popt", optionService.loadFullOptionProcess(item_key));
 		return "productdetail";
 	}
 	
+	@RequestMapping(value = "insert_cart.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<CartDTO> insertCart(CartDTO cdto) {
+		return cartService.insertCartProcess(cdto);
+	}
 	////////////////////////////////////////////////////////////////// 상품 리스트 관련 매핑
 
 	@RequestMapping("/order.do")
@@ -595,7 +601,7 @@ public class MainController {
 
 		// cart테이블에서 member_id컬럼의 값이 현재 로그인 되어있는 회원의 아이디만 가져온다.
 		// List<CartDTO>에 넣어준다. (list)
-		List<CartDTO> list = cartService.cartListPro(member_id);
+		List<CartDTO> list = cartService.cartListProcess(member_id);
 
 		// 현재 회원이 장바구니에 담은 상품들의 전체 가격을 계산한다. (total_price)
 		int total_price = 0;
@@ -611,20 +617,33 @@ public class MainController {
 	//////// 페이지 출력 기능
 	// list, total_price 를 뷰로 보내주고 처리한다.
 	@RequestMapping("/cart.do")
-	public ModelAndView cart(HttpSession session) {
+	public ModelAndView cart(HttpSession session, String item_key) {
 		ModelAndView mav = new ModelAndView();
 		List<CartDTO> list = null;
-
+		//썸네일과 상품정보를 불러오기 위해서 iteminfo 라는 itemDTO 변수 생성
+		List<ItemDTO> itemInfo = new ArrayList<ItemDTO>();
+		
 		// 세션에저장되어 있는 값을 가져온다. (member_id)
 		String member_id = (String) session.getAttribute("member_id");
-
+		
 		// cart테이블에서 member_id컬럼의 값이 현재 로그인 되어있는 회원의 아이디만 가져온다.
 		// List<CartDTO>에 넣어준다. (list)
-		list = cartService.cartListPro(member_id);
-
+		list = cartService.cartListProcess(member_id);
+		
 		// 현재 회원이 장바구니에 담은 상품들의 전체 가격을 계산한다. (total_price)
 		int total_price = totalPrice(member_id);
-
+		
+		// item의 정보를 불러오는 프로세스 가져옴
+		for(int i = 0; i < list.size(); i++) {
+			String getItem = list.get(i).getItem_key();
+			itemInfo.add(listService.listContentProcess(getItem));
+		}
+		for(int i =0; i < itemInfo.size(); i++) {
+			System.out.println(itemInfo.get(i).getItem_title());
+			System.out.println(itemInfo.get(i).getItem_thumbnail());
+		}
+		mav.addObject("itemInfo", itemInfo);
+		
 		mav.addObject("list", list);
 		mav.addObject("total_price", total_price);
 
@@ -640,7 +659,7 @@ public class MainController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("cart_num", cart_num);
 		map.put("operation", operation);
-		CartDTO dto = cartService.updateCartPro(map);
+		CartDTO dto = cartService.updateCartProcess(map);
 
 		// 세션에저장되어 있는 값을 가져온다. (member_id)
 		String member_id = (String) session.getAttribute("member_id");
@@ -661,7 +680,7 @@ public class MainController {
 	public @ResponseBody List<CartDTO> deleteCart(int cart_num, HttpSession session) {
 		List<CartDTO> list = new ArrayList<CartDTO>();
 		String member_id = (String) session.getAttribute("member_id");
-		list = cartService.deleteCartPro(cart_num, member_id);
+		list = cartService.deleteCartProcess(cart_num, member_id);
 
 		return list;
 	}

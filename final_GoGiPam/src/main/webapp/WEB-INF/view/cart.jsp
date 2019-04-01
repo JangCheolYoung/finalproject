@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>카아아아트</title>
+<title>GoGipam</title>
 <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"/>
@@ -139,11 +139,11 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 			alert('주문 페이지로 이동.');
 			// 해야 할 일 : 주문 페이지로 이동하도록 경로 추가.
 		});
+		
 		$('.back_btn').on('click', function(){
 			alert('쇼핑 페이지로 이동.');
 			// 해야 할 일 : 쇼핑 페이지로 이동하도록 경로 추가.
 		});
-		
 		
 	});// end ready()/////////////////////////////////////////
 	
@@ -155,7 +155,7 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 		$('.cart').empty();
 		$.each(res, function(index, value){
 			var source = 	'<div style="height: 147px; border-bottom: 1.5px solid #f8f8f8; ">'
-						  + 	'<div class="item thumbnail">상품사진1</div>'
+						  + 	'<div class="item thumbnail"></div>'
 						  + 	'<div style="float: left; width:350px; height: 45px; margin: 50px 0 0 53px;">'
 						  + 		'<p class="item name" style="font-size: 16px; cursor: pointer; display: inline-block;">수신선 무항생제 한우 등심(1+등급)'+value.cart_num + '</p>'
 						  + 		'<p style="font-size: 13px; color: #e1dedf;">옵션</p>'
@@ -267,12 +267,13 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 							<!-- 장바구니에 담긴 상품 list가져와서 foreach를 사용해서 출력해준다. -->
 							<c:forEach items="${list}" var="dto" varStatus="i">
 								<!-- 회색 선. -->
+								<c:set var='index' value='${i.index}'/>
 								<div style="height: 147px; border-bottom: 1.5px solid #f8f8f8; ">
 								<!-- 상품 사진 ////////////////////////////////////////////////////////////////////////////////////////-->
-									<div class="item thumbnail">상품사진1</div>
+									<div class="item thumbnail" style="background: url(${itemInfo[index].item_thumbnail})"></div>
 								<!-- 상품 이름 ////////////////////////////////////////////////////////////////////////////////////////-->
 									<div style="float: left; width:350px; height: 45px; margin: 50px 0 0 53px;">
-										<p class="item name" style="font-size: 16px; cursor: pointer; display: inline-block;">수신선 무항생제 한우 등심(1+등급)${dto.cart_num}</p>
+										<p class="item name" style="font-size: 16px; cursor: pointer; display: inline-block;">${itemInfo.item_title}</p>
 										<p style="font-size: 13px; color: #e1dedf;">옵션</p>
 									</div>	
 								<!-- 상품 수량////////////////////////////////////////////////////////////////////////////////////////-->
