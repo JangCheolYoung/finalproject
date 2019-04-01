@@ -454,7 +454,7 @@
 					</div>		
 				</div>	
 			</div>
-		</div>
+		</div> <!-- purchase box end -->
 		
 		<div class="purchase_title" style="margin-top: 40px;">
 			배송정보

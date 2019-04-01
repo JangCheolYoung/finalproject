@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import dto.AddressDTO;
+import dto.CardDTO;
 import dto.CartDTO;
 import dto.FaqDTO;
 import dto.ItemDTO;
@@ -596,8 +597,40 @@ public class MainController {
 	}
 	
 	@RequestMapping("/purchase.do")
-	public String purchase() {
-		return "purchase";
+	public ModelAndView purchase(HttpSession session, CardDTO cardDto) {
+		ModelAndView mav = new ModelAndView();
+		String member_id = (String) session.getAttribute("member_id");
+		
+		List<ItemDTO> itemInfo = new ArrayList<ItemDTO>();
+		// 상품 정보 호출을 위해 ItemDTO 리스트 호출
+		
+		List<String> optionInfo = new ArrayList<String>();
+		// 옵션 정보 호출을 위해 OptionInfo 생성
+		
+		List<CartDTO> cartList = cartService.cartListProcess(member_id);
+		// 아이디에 해당하는 Cart리스트 출력
+		
+		int totalPrice = totalPrice(member_id);
+		// 총 가격 계산을 위한 메소드 호출
+		
+		for(int i = 0; i < cartList.size(); i++) {
+			String getItem = cartList.get(i).getItem_key();
+			String getOption = cartList.get(i).getOption_key();
+			itemInfo.add(listService.listContentProcess(getItem));
+			optionInfo.add(optionService.loadOptionProcess(getOption));
+		}
+		// CartList에서 itemKey, optionKey를 빼서 해당하는 정보들을 리스트에 add
+		
+		mav.addObject("userInfo", memberService.infoUserProcess(member_id));
+		// 적립금 사용과 카드 저장, 읽기를 위한 memberInfo 정보 출력 ?
+		mav.addObject("cardInfo", cardService.selectCardProcess(member_id));
+		mav.addObject("itemInfo", itemInfo);
+		mav.addObject("optionInfo", optionInfo);
+		mav.addObject("total_price", totalPrice);
+		mav.setViewName("purchase");
+		
+		return mav;
+		
 	}
 	/////////////////////////////////////////////////////////////////// 상품 주문관련 매핑
 
@@ -649,11 +682,11 @@ public class MainController {
 			optionInfo.add(optionService.loadOptionProcess(getOption));
 		}
 		
-		for(int i =0; i < itemInfo.size(); i++) {
-			System.out.println(itemInfo.get(i).getItem_title());
-			System.out.println(itemInfo.get(i).getItem_thumbnail());
-			System.out.println(optionInfo.get(i));		
-		}
+//		for(int i =0; i < itemInfo.size(); i++) {
+//			System.out.println(itemInfo.get(i).getItem_title());
+//			System.out.println(itemInfo.get(i).getItem_thumbnail());
+//			System.out.println(optionInfo.get(i));		
+//		}
 		
 		mav.addObject("itemInfo", itemInfo);
 		mav.addObject("optionInfo", optionInfo);

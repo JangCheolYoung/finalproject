@@ -211,10 +211,11 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 				
 		var price = res[0].cart_amount * res[0].cart_price;
 		var total_price = res[1];
+		var total_mileage = res[1] * 0.03;
 		//console.log(addComma(price));
 		
 		// 기존의 수량을 지워주고 가져온 수량을 넣어줌.
-		$('div[class="'+ cart_num +'"]').empty();;
+		$('div[class="'+ cart_num +'"]').empty();
 		$('div[class="'+ cart_num +'"]').text(res[0].cart_amount);
 		
 		$('span[class="'+ cart_num +'"]').empty();
@@ -222,7 +223,8 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 		
 		$('#total_price').empty();
 		$('#total_price').text(addComma(total_price));
-		
+		$('#total_mileage').empty();
+		$('#total_mileage').text(addComma(total_mileage));
 		
 		// 임의로 준 배송료 2500원
 		var delivery = 2500;
@@ -301,18 +303,19 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 						
 						<div style="width:220px; margin-left: auto; margin-right: auto; border-top: 1px solid #e1dedf;"></div>
 						
-						<div style="width:220px; height: 110px; margin-left: auto; margin-right: auto; line-height: 90px;">
+						<div style="width:220px; height: 40px; margin-left: auto; margin-right: auto; line-height: 90px;">
 							<div style="height: 40px; line-height: 40px; margin-top: 10px;">
-								<span style="float: left; font-size: 15px;">총 배송비</span>
+								<span style="float: left; font-size: 15px;">기본 배송비</span>
 								<span style="float: right; font-size: 15px;"><span>2,500</span>원</span>
 							</div>
-							<div style="float: right; margin-left: 80px; font-size: 13px; height: 24px; line-height: 1.9; color:#9b9b9b;">
-								<span style="text-align: right; margin-right: 15px; ">기본 배송비</span>
-								<span style="display: inline-block; text-align: right; width: 50px;"><fmt:formatNumber value="2500" pattern="#,###"/><span>원</span></span>
-							</div>
-							<div style="float: right; margin-left: 80px; font-size: 13px; height: 24px; line-height: 1.9; color: #4a90e2;">
-								<span style="text-align: right; margin-right: 15px;">신선할인</span>
-								<span style=" display: inline-block; text-align: right; width: 50px;">-0%</span>
+						</div>
+						
+						<div style="width:220px; margin-left: auto; margin-right: auto; border-top: 1px solid #e1dedf;"></div>
+						
+						<div style="width:220px; height: 40px; margin-left: auto; margin-right: auto; line-height: 90px;">
+							<div style="height: 40px; line-height: 40px; margin-top: 10px;">
+								<span style="float: left; font-size: 15px; color: blue">구매시 적립금</span>
+								<span style="float: right; font-size: 15px; color: blue"><span id="total_mileage"><fmt:formatNumber value="${total_price * 0.03}" pattern="#,###"/></span>원</span>
 							</div>
 						</div>
 						

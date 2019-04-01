@@ -8,8 +8,8 @@
   	</select>
   
   	<insert id="insertMember" parameterType="dto.MemberDTO">		
-		insert into members (member_id, member_pwd, member_name, member_tel, join_date)
-		values (#{member_id}, #{member_pwd}, #{member_name}, #{member_tel}, sysdate)		
+		insert into members (member_id, member_pwd, member_name, member_tel, join_date, member_mileage)
+		values (#{member_id}, #{member_pwd}, #{member_name}, #{member_tel}, sysdate, 1000)		
 	</insert>
 	
 	<select id="dupIdCheck" parameterType="java.lang.String" resultType="dto.MemberDTO">
@@ -40,4 +40,6 @@
 	<update id="updatepw" parameterType="dto.MemberDTO">
 		update members set member_pwd = #{member_pwd} where member_id = #{member_id}
 	</update>
+	
+	<!-- 적립금  -->
   </mapper>
