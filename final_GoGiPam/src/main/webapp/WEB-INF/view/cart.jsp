@@ -25,12 +25,11 @@ overflow: auto;
 
 .item.thumbnail{
 float: left; 
-width:109px; 
+width: 109px; 
 height: 109px; 
 border: 1px solid #e1dedf; 
 margin: 19px 0 0 24px;  
 cursor: pointer;
-
 }
 
 .cart_amount{
@@ -247,7 +246,7 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 	<c:choose>
 		<c:when test="${!empty list}">
 		<!-- 장바구니에 1개 이상 들어있을 때 생성해준다.-->
-			<div class="has_items" style="height: 100%;">
+			<div class="has_items" style="height: 1000px">
 				<!-- 장바구니 텍스트. -->
 				<div style="height: 30px; font-size: 32px; text-align: center;">장바구니</div>
 				
@@ -267,14 +266,14 @@ width: 220px; height: 50px; margin-right: auto; margin-left: auto; text-align: c
 							<!-- 장바구니에 담긴 상품 list가져와서 foreach를 사용해서 출력해준다. -->
 							<c:forEach items="${list}" var="dto" varStatus="i">
 								<!-- 회색 선. -->
-								<c:set var='index' value='${i.index}'/>
+								<c:set var='index' value='${i.index}'/> <!-- varStatus로 현재 인덱스 값을 받아옴 -->
 								<div style="height: 147px; border-bottom: 1.5px solid #f8f8f8; ">
 								<!-- 상품 사진 ////////////////////////////////////////////////////////////////////////////////////////-->
-									<div class="item thumbnail" style="background: url(${itemInfo[index].item_thumbnail})"></div>
+									<div class="item thumbnail"><img src="${itemInfo[index].item_thumbnail}" /></div>
 								<!-- 상품 이름 ////////////////////////////////////////////////////////////////////////////////////////-->
 									<div style="float: left; width:350px; height: 45px; margin: 50px 0 0 53px;">
-										<p class="item name" style="font-size: 16px; cursor: pointer; display: inline-block;">${itemInfo.item_title}</p>
-										<p style="font-size: 13px; color: #e1dedf;">옵션</p>
+										<p class="item name" style="font-size: 16px; cursor: pointer; display: inline-block;">${itemInfo[index].item_title}</p>
+										<p style="font-size: 13px; color: gray;">${optionInfo[index]}</p>
 									</div>	
 								<!-- 상품 수량////////////////////////////////////////////////////////////////////////////////////////-->
 									<div class="cart_amount">

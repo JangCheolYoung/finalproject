@@ -39,5 +39,16 @@ public class CartDAOImp implements CartDAO {
 		sqlSession.insert("cart.insert", cdto);
 		return sqlSession.selectList("cart.list", cdto.getMember_id());
 	}
+	
+	@Override
+	public List<CartDTO> dupOrderCart(CartDTO cdto) {
+		sqlSession.update("cart.dupOrder", cdto);
+		return sqlSession.selectList("cart.list", cdto.getMember_id());
+	}
+
+	@Override
+	public int dupChkCart(CartDTO cdto) {
+		return sqlSession.selectOne("cart.dupChk", cdto);
+	}
 
 }

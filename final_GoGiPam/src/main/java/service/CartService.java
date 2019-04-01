@@ -10,4 +10,6 @@ public interface CartService {
 	public CartDTO updateCartProcess(Map<String, Object> map);
 	public List<CartDTO> deleteCartProcess(int cart_num, String member_id);
 	public List<CartDTO> insertCartProcess(CartDTO cdto);
+	public int dupChkProcess(CartDTO cdto);
+	public List<CartDTO> dupOrderProcess(CartDTO cdto);
 }

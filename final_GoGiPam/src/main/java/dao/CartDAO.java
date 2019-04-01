@@ -16,4 +16,10 @@ public interface CartDAO {
 	
 	// cart에 insert
 	public List<CartDTO> insertCart(CartDTO cdto);
+	
+	// cart 중복 사항이 있을 경우 처리해야하므로 검사
+	public int dupChkCart(CartDTO cdto);
+	
+	// cart에 중복된 사항이 들어올 경우 수량만 증가 시킴.
+	public List<CartDTO> dupOrderCart(CartDTO cdto);
 }

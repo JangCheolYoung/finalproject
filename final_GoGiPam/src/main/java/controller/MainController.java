@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.imgscalr.Scalr;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -548,7 +549,11 @@ public class MainController {
 	@RequestMapping(value = "insert_cart.do", method = RequestMethod.POST)
 	@ResponseBody
 	public List<CartDTO> insertCart(CartDTO cdto) {
-		return cartService.insertCartProcess(cdto);
+		if(cartService.dupChkProcess(cdto) == 1) {
+			return cartService.dupOrderProcess(cdto);
+		} else {
+			return cartService.insertCartProcess(cdto);
+		}
 	}
 	////////////////////////////////////////////////////////////////// 상품 리스트 관련 매핑
 
@@ -620,8 +625,11 @@ public class MainController {
 	public ModelAndView cart(HttpSession session, String item_key) {
 		ModelAndView mav = new ModelAndView();
 		List<CartDTO> list = null;
-		//썸네일과 상품정보를 불러오기 위해서 iteminfo 라는 itemDTO 변수 생성
+		//썸네일과 상품정보를 불러오기 위해서 iteminfo 라는 itemDTO 리스트 컬렉션 생성
 		List<ItemDTO> itemInfo = new ArrayList<ItemDTO>();
+		
+		//옵션 정보 호출을 위해 optionInfo 생성
+		List<String> optionInfo = new ArrayList<String>();
 		
 		// 세션에저장되어 있는 값을 가져온다. (member_id)
 		String member_id = (String) session.getAttribute("member_id");
@@ -636,13 +644,19 @@ public class MainController {
 		// item의 정보를 불러오는 프로세스 가져옴
 		for(int i = 0; i < list.size(); i++) {
 			String getItem = list.get(i).getItem_key();
+			String getOption = list.get(i).getOption_key();
 			itemInfo.add(listService.listContentProcess(getItem));
+			optionInfo.add(optionService.loadOptionProcess(getOption));
 		}
+		
 		for(int i =0; i < itemInfo.size(); i++) {
 			System.out.println(itemInfo.get(i).getItem_title());
 			System.out.println(itemInfo.get(i).getItem_thumbnail());
+			System.out.println(optionInfo.get(i));		
 		}
+		
 		mav.addObject("itemInfo", itemInfo);
+		mav.addObject("optionInfo", optionInfo);
 		
 		mav.addObject("list", list);
 		mav.addObject("total_price", total_price);

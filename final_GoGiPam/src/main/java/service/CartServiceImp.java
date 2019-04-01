@@ -36,4 +36,14 @@ public class CartServiceImp implements CartService {
 		return cdao.insertCart(cdto);
 	}
 
+	@Override
+	public List<CartDTO> dupOrderProcess(CartDTO cdto) {
+		return cdao.dupOrderCart(cdto);
+	}
+
+	@Override
+	public int dupChkProcess(CartDTO cdto) {
+		return cdao.dupChkCart(cdto);
+	}
+
 }

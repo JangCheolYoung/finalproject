@@ -23,5 +23,14 @@
 	<insert id="insert" parameterType="dto.CartDTO">
 		insert into cart values(cart_seq.nextval, #{item_key}, #{option_key}, #{member_id}, #{cart_amount}, #{cart_price})
 	</insert>
+	
+	<select id="dupChk" parameterType="dto.CartDTO" resultType="int">
+		select count(*) from cart where item_key = #{item_key} and option_key = #{option_key}
+	</select>
+	
+	<update id="dupOrder" parameterType="dto.CartDTO">
+		update cart set cart_amount = cart_amount + #{cart_amount} where 
+			item_key = #{item_key} and option_key = #{option_key}
+	</update>
 
 </mapper>  
