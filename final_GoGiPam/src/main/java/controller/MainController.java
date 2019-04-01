@@ -612,7 +612,7 @@ public class MainController {
 		
 		int totalPrice = totalPrice(member_id);
 		// 총 가격 계산을 위한 메소드 호출
-		
+			
 		for(int i = 0; i < cartList.size(); i++) {
 			String getItem = cartList.get(i).getItem_key();
 			String getOption = cartList.get(i).getOption_key();
@@ -624,13 +624,20 @@ public class MainController {
 		mav.addObject("userInfo", memberService.infoUserProcess(member_id));
 		// 적립금 사용과 카드 저장, 읽기를 위한 memberInfo 정보 출력 ?
 		mav.addObject("cardInfo", cardService.selectCardProcess(member_id));
+		mav.addObject("cartList", cartList);
 		mav.addObject("itemInfo", itemInfo);
 		mav.addObject("optionInfo", optionInfo);
-		mav.addObject("total_price", totalPrice);
+		mav.addObject("totalPrice", totalPrice);
 		mav.setViewName("purchase");
 		
 		return mav;
 		
+	}
+	
+	@RequestMapping(value = "card_insert.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<CardDTO> cardInsert(CardDTO cardDto) {
+		return cardService.insertCardProcess(cardDto);
 	}
 	/////////////////////////////////////////////////////////////////// 상품 주문관련 매핑
 

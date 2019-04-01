@@ -101,7 +101,6 @@ input::placeholder{
 </script>
 </head>
 <body>
-<div>wkdcjfdjd@naver.com<br>cjfdud123@<br>ghdrlfehd@naver.com<br>rlfehd123@<br></div>
 	<div style="width: 780px; height: 503px; margin-left: auto; margin-right: auto; position: relative; margin-top: 100px;">
 		<div style="font-size: 32px; line-height: 0.81; text-align: center;">로그인</div>
 		<div style="margin-top: 22px; border: solid 1px #e1dedf; height: 372px; width: 100%;">
@@ -110,7 +109,7 @@ input::placeholder{
 				<div style="margin-top: 46px;margin-left: 127px;height: 94px;">
 					<form name="loginForm" method="post" action="logPro.do">
 						<div style="display: inline-block;float: left;">
-							<input type="text" name="member_id" id="member_id" class="input_id" placeholder="아이디(이메일 주소)를 입력하세요" style="outline: 0;font-size: 13px;padding-left: 23px;display: block;width: 375px;height: 38px;border: solid 1px #e1dedf;"/>
+							<input type="text" name="member_id" id="member_id" class="input_id" placeholder="아이디(이메일 주소)를 입력하세요" autocomplete="off" style="outline: 0;font-size: 13px;padding-left: 23px;display: block;width: 375px;height: 38px;border: solid 1px #e1dedf;"/>
 							<input type="password" name="member_pwd" id="member_pwd" class="input_password" placeholder="비밀번호를 입력하세요" style="outline: 0; font-size: 13px; padding-left: 23px; display: block; width: 375px; height: 38px; border: solid 1px #e1dedf; margin-top: 18px;">
 						</div>
 						<input type="hidden" name="returnUrl" value="${param.returnUrl}" />
@@ -131,49 +130,37 @@ input::placeholder{
 	
 	
 <!-- 아이디나 비밀번호 틀렸을 때 보여줄  Modal -->
-  <div class="modal fade" id="failLoginModal" role="dialog">
-    <div class="modal-dialog modal-fullsize">
-    
-      <!-- Modal content-->
-      <div class="modal-content modal-fullsize">
-        <div class="modal-header">
-          <h4 class="modal-title">잘못된 아이디 또는 비밀번호</h4>
-        </div>
-        <div class="modal-body">
-          <p>가입되지 않은 아이디이거나 비밀번호가 잘못되었습니다.</p><br>
-          <p>확인 후 다시 입력해주시기 바랍니다.</p>
-        </div>
-        <br>
-        <div class="modal-footer">
-          <button class="btn btn-default" data-dismiss="modal" id="modalok">확인</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>	
+<div class="modal modal-center fade" id="failLoginModal" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">가입되지 않은 아이디이거나 비밀번호가 잘못되었습니다. 확인하여 주세요.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+
+	        </div>
+	      </div>
+	</div>
+</div>
 		
 <!-- 세션값 확인해서 없으면 인터럽트로 로그인페이지로 이동시켜주고 보여줄  Modal -->
-
-  <div class="modal fade" id="loginModal" role="dialog">
-    <div class="modal-dialog modal-fullsize">
-    
-      <!-- Modal content-->
-      <div class="modal-content modal-fullsize">
-        <div class="modal-header">
-<!--           <button type="button" class="close" data-dismiss="modal">&times;</button> -->
-          <h4 class="modal-title">로그인이 필요한 서비스입니다.</h4>
-        </div>
-        <div class="modal-body">
-          <p>고기팜에 회원 계정이 있으시면 로그인을 해주세요.</p><br>
-        </div>
-        <br>
-        <div class="modal-footer">
-          <button class="btn btn-default" data-dismiss="modal" id="modalok">확인</button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
+<div class="modal modal-center fade" id="loginModal" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">고기팜에 회원 계정이 있으시면 로그인을 해주세요.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	      </div>
+	</div>
+</div>
   
 </body>
 </html>

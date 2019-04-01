@@ -187,7 +187,6 @@
 	border: 1px solid black;
 	border-radius: 3px;
 	background-color: white;
-	width: 68px;
 	height: 30px;
 	font-size: 18px;
 	margin-top: 4px;
@@ -460,6 +459,15 @@ $(document).ready(function () {
 	});
 	/// 모든 인풋값을 입력하기 전까지는 등록하기 버튼 비활성화
 	
+	$('#address_btn').on('click', function() {
+		$('#orderModal').modal('show');
+	});
+	
+	$('#insert_adrbtn').on('click', function() {
+		$('#orderModal2').modal('show');
+		$('#orderModal').modal('hide');
+	});
+	
 	$('#recipient_submitBtn').on('click', function() {
 		var member_id = $('#member_id').val();
 		var post_num = $('#post_num').val();
@@ -470,7 +478,7 @@ $(document).ready(function () {
 		
 		if(telchk.test($('#receiver_tel').val()) == false) {
 			$('#error2Modal').modal('show');
-			$('#orderModal').modal('show');
+			//$('#orderModal').modal('show');
 		} else {
 			$('#orderModal').modal('toggle');
 			$('#orderModal2').modal('hide');
@@ -494,6 +502,9 @@ $(document).ready(function () {
 	//////////////////////////////////////////////////////////////////////////주소 등록하기
 	
 	$(document).on('click','#adrAlterBtn', function() { // 동적으로 받을 때.. 클릭 이벤트가 일어난 버튼에서 기능을 수행해라
+		$('#orderModal3').modal('show');
+		$('#orderModal').modal('hide');
+	
 		var num = $(this).attr('class').split(' ')[1]; // num을 받아옴
 		
 		var member_id = 'nananan1213@naver.com'; // 후에 세션으로 처리할 것
@@ -527,10 +538,10 @@ $(document).ready(function () {
 		var address_num = $('#alter_address_num').val();
 		
 		if(telchk.test($('#alter_receiver_tel').val()) == false) {
-			$('#error2Modal').modal('toggle');
-			$('#orderModal').modal('show');
+			$('#error2Modal').modal('show');
+			//$('#orderModal').modal('show');
 		} else {		
-			$('#orderModal').modal('toggle');
+			$('#orderModal').modal('show');
 			$('#orderModal3').modal('hide');
 
 			$.ajax({
@@ -603,7 +614,7 @@ $(document).ready(function () {
 						+'	</div>'
 						+'</div>'
 						+'<div class="adrtable_btnline">'
-						+	'<button type="button" id="adrAlterBtn" class="adrtable_btn {{address_num}}" data-target="#orderModal3" data-toggle="modal" data-dismiss="modal">'
+						+	'<button type="button" id="adrAlterBtn" class="adrtable_btn {{address_num}}">'
 						+		'변경'
 						+ '</button>'
 						+	'<button type="button" id="adrDeleteBtn" class="adrtable_btn {{address_num}}">'
@@ -742,7 +753,7 @@ $(document).ready(function () {
 		
 		<div class="order_address_title" style="margin-top: 54px;">
 			받으시는 분
-			<button id="address_btn" style="border-radius: 5px;" data-toggle="modal" data-target="#orderModal">
+			<button id="address_btn" style="border-radius: 5px;" type="button">
 				주소선택
 			</button>
 		</div>
@@ -800,7 +811,7 @@ $(document).ready(function () {
       	<div class="modal-body" style="text-align: center; width: 598px; height: 533px;">
         		<div class="ordermodal_title">
         			<span style="font-weight: bold; height: 34px; font-size: 20px; margin-left: 100px;">주소 선택</span>
-        			<button id="insert_adrbtn" class="ordermodal_btn" data-target="#orderModal2" data-toggle="modal" data-dismiss="modal">
+        			<button id="insert_adrbtn" class="ordermodal_btn"> <!-- data-target="#orderModal2" data-toggle="modal" data-dismiss="modal" -->
         				+ 신규주소 등록
         			</button>
         		</div>
@@ -844,7 +855,7 @@ $(document).ready(function () {
          							</div>
          							
          							<div class="adrtable_btnline">
-         								<button type="button" id="adrAlterBtn" class="adrtable_btn ${adrList.address_num}" data-target="#orderModal3" data-toggle="modal" data-dismiss="modal">
+         								<button type="button" id="adrAlterBtn" class="adrtable_btn ${adrList.address_num}"> <!-- data-target="#orderModal3" data-toggle="modal" data-dismiss="modal"> -->
          									변경
          								</button>
          								<button type="button" id="adrDeleteBtn" class="adrtable_btn ${adrList.address_num}">
@@ -866,7 +877,6 @@ $(document).ready(function () {
         		
       	</div>
       	<div class="modal-footer" style="border-top: none;">
-        		<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
       	</div>
     		</div>
   	</div>
@@ -929,7 +939,7 @@ $(document).ready(function () {
       				등록하기
       			</button>
       			
-      			<button class="ordermodal_btn2" id="recipient_submitBtn" type="button" data-dismiss="modal"  
+      			<button class="ordermodal_btn2" id="recipient_submitBtn" type="button"
       					style="display: none">
       				등록하기
       			</button>
@@ -937,7 +947,6 @@ $(document).ready(function () {
       		</div>
       	</div>
       	<div class="modal-footer" style="border-top: none;">
-        		<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
       	</div>
     		</div>
   	</div>
@@ -1002,7 +1011,7 @@ $(document).ready(function () {
       				등록하기
       			</button>
       			
-      			<button class="ordermodal_btn2" id="recipient_updateBtn" type="button" data-dismiss="modal"
+      			<button class="ordermodal_btn2" id="recipient_updateBtn" type="button"
       					style="display: none">
       				등록하기
       			</button>
@@ -1010,7 +1019,6 @@ $(document).ready(function () {
       		</div>
       	</div>
       	<div class="modal-footer" style="border-top: none;">
-        		<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
       	</div>
     		</div>
   	</div> 	
@@ -1027,7 +1035,6 @@ $(document).ready(function () {
          		<p>주소지를 하나 선택하신 후 하셔야 합니다.</p>
        	</div>
        	<div class="modal-footer" style="border-top: none;">
-         		<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
        	</div>
      		</div>
    	</div>
@@ -1043,7 +1050,6 @@ $(document).ready(function () {
          		<p>전화번호를 제대로 입력해 주셔야 합니다.</p>
        	</div>
        	<div class="modal-footer" style="border-top: none;">
-         		<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
        	</div>
      		</div>
    	</div>

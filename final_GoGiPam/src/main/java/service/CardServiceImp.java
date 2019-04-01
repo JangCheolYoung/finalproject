@@ -10,7 +10,7 @@ public class CardServiceImp implements CardService {
 	private CardDAO cardDao;
 
 	public CardServiceImp() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public void setCardDao(CardDAO cardDao) {
@@ -23,27 +23,25 @@ public class CardServiceImp implements CardService {
 	}
 
 	@Override
-	public void insertCardProcess(CardDTO cdto) {
+	public List<CardDTO> insertCardProcess(CardDTO cdto) {
 		cardDao.insertCard(cdto);
-
+		return cardDao.selectCard(cdto.getMember_id());
 	}
 
 	@Override
-	public void deleteCardProcess(CardDTO cdto) {
+	public List<CardDTO> deleteCardProcess(CardDTO cdto) {
 		cardDao.deleteCard(cdto);
-
+		return cardDao.selectCard(cdto.getMember_id());
 	}
 
 	@Override
 	public void selectDefaultProcess(CardDTO cdto) {
 		cardDao.selectDefault(cdto);
-
 	}
 
 	@Override
 	public void selectnonDefaultProcess(CardDTO cdto) {
 		cardDao.selectnonDefault(cdto);
-
 	}
 
 	@Override

@@ -125,7 +125,7 @@ $(document).ready(function() {
 </head>
 <body>
 <div id="list_wrap">
-	<div id=list_select style="margin-top: 20px; border: 1px solid black">
+	<div id=list_select style="margin-top: 20px;">
 		<span style="width: 100px;" id="allProd" class="on">전체상품</span>
 		<span style="width: 100px; margin-left: 40px;" id="beefProd" class="off">소고기</span>
 		<span style="width: 100px; margin-left: 40px;" id="porkProd" class="off">돼지고기</span>

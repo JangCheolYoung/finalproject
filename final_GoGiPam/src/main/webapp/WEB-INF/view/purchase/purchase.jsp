@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -111,6 +112,14 @@
 	.payitemPrice {
 		font-size: 15px;
 		width: 130px;
+		float: right;
+		text-align: right;
+		color: black;
+	}
+	
+	.payitemUnit {
+		font-size: 15px;
+		width: 110px;
 		float: right;
 		text-align: right;
 		color: black;
@@ -309,6 +318,21 @@
 		
 		//강제로 문자 입력 후 등록 누를시 차단하기 위한 정규식 (오직 숫자만)
 		var cardchk = /[^0-9]/g;
+		
+		$('.card_RegisterBtn').on('click', function() {
+			if($('#card_nickname').val() != '' &&
+			   $('#card_birthday').val() != '' && cardchk.test(($('#card_birthday').val())) == true &&
+			   $('#card_number').val() != '' && cardchk.test(($('#card_number').val())) == true &&
+			   $('#card_year').val() != '' && cardchk.test(($('#card_year').val())) == true &&
+			   $('#card_month').val() != '' && cardchk.test(($('#card_month').val())) == true && 
+			   $('#card_password').val() != '' && cardchk.test(($('#card_password').val())) == true) {
+			   		alert('앙 기모링');				
+			} else {
+				 $('#cardErrorModal1').modal();
+				
+			}
+			   
+		});
 		 
 	})
 </script>
@@ -390,21 +414,24 @@
 			주문내역
 		</div>
 		<div class="purchase-box" style="margin-top: 20px;">
+		<c:forEach items="${cartList}" var="cartList" varStatus="i">
+			<c:set var='index' value='${i.index}' /> <!-- 인덱스를 받아와야 출력이 가능함 -->
 			<div class="payitemList">
-				<span class="payitemName">기모허누</span>
-				<span class="payitemOption">기이모</span>
-				<span class="payitemPrice">기2모</span>
-				<span class="payitemAmount">ki모</span>
+				<span class="payitemName">${itemInfo[index].item_title}</span>
+				<span class="payitemOption">${optionInfo[index]}</span>
+				<span class="payitemPrice">${cartList.cart_price * cartList.cart_amount} 원</span>
+				<span class="payitemAmount">${cartList.cart_amount} 팩</span>
+				<span class="payitemUnit">1팩당 ${itemInfo[index].item_price} 원</span>
 			</div>
-			
+		</c:forEach>	
 			<div class="payitemSummary">
-				<div class="paySummaryPrice" style="margin-left: 95px;">
+				<div class="paySummaryPrice" style="margin-left: 125px;">
 					<div class="itemPriceTitle">
 						상품총합
 					</div>
 					
 					<div class="itemPriceValue">
-						기리모리
+						${totalPrice}
 						<span style="font-size: 13px;">원</span>
 					</div>		
 				</div>
@@ -419,7 +446,7 @@
 					</div>
 					
 					<div class="itemPriceValue">
-						기2리모리
+						2500
 						<span style="font-size: 13px;">원</span>
 					</div>		
 				</div>
@@ -434,7 +461,7 @@
 					</div>
 					
 					<div class="itemPriceValue">
-						기2..리모리
+						
 						<span style="font-size: 13px;">원</span>
 					</div>		
 				</div>
@@ -449,7 +476,7 @@
 					</div>
 					
 					<div class="itemPriceValue" style="color: red">
-						기2..리모리
+						${totalPrice + 2500 - 0}
 						<span style="font-size: 13px; color: black">원</span>
 					</div>		
 				</div>	
@@ -513,11 +540,7 @@
 	          			</div>
 	          			<div class="card_ActiveTitle">시발죽자</div>
 	          		</div>
-	          		
-	     
 	          	</div>	
-	          	<button class="card_AddBtn" type="button"></button>
-	          	<button class="card_AddBtn" type="button"></button>
 	          	<button class="card_AddBtn" type="button"></button>
 	          </div>
 	          
@@ -600,7 +623,7 @@
 	          		<div>
 	          			<input id="card_password" type="password" maxlength="2" 
 	          				style="width: 300px; height: 38px; padding-left: 15px; font-size: 15px;
-	          				 border: 1px solid black; margin-left: 23px; margin-top: 25px;"/
+	          				 border: 1px solid black; margin-left: 23px; margin-top: 25px;"
 	          				 placeholder="비밀번호 앞 2자리 입력">
 	          		</div>
 	          	</div>
@@ -611,6 +634,22 @@
 	          <div style="width: 600px; height: 60px; display: flex; flex-wrap: wrap;">
 	          	<button class="card_RegisterBtn" type="button">등록하기</button>
 	          </div>
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<!-- 카드 등록 오류 시 모달 (잘못 입력한 경우) -->
+<div class="modal modal-center fade" id="cardErrorModal1" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">빈 칸이 있거나 잘못 입력하셨습니다. 확인해주세요.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
 	        </div>
 	    </div>
 	</div>
