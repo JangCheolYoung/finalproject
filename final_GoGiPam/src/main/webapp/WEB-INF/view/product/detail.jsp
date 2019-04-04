@@ -58,7 +58,7 @@
 			var member_id = '<%= (String) session.getAttribute("member_id")%>';
 			//alert(member_id);
 			var item_key = '${plist.item_key}';
-			var option_key = $('#drop_key').text();
+			var option_key = $('#drop_key').text().trim();
 			var cart_amount = parseInt($('#d_amount').text());
 			var cart_price = ${plist.item_price};
 			

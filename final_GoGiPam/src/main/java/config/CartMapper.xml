@@ -25,12 +25,12 @@
 	</insert>
 	
 	<select id="dupChk" parameterType="dto.CartDTO" resultType="int">
-		select count(*) from cart where item_key = #{item_key} and option_key = #{option_key}
+		select count(*) from cart where item_key = #{item_key} and option_key = #{option_key} and member_id = #{member_id}
 	</select>
 	
 	<update id="dupOrder" parameterType="dto.CartDTO">
 		update cart set cart_amount = cart_amount + #{cart_amount} where 
-			item_key = #{item_key} and option_key = #{option_key}
+			item_key = #{item_key} and option_key = #{option_key} and member_id = #{member_id}
 	</update>
 
 </mapper>  

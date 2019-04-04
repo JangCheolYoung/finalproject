@@ -34,6 +34,7 @@ import dto.FaqDTO;
 import dto.ItemDTO;
 import dto.MemberDTO;
 import dto.OptionDTO;
+import dto.OrderDTO;
 import dto.QnaDTO;
 import dto.QnaPageDTO;
 import email.SendEmail;
@@ -45,6 +46,7 @@ import service.FaqService;
 import service.ListService;
 import service.MemberService;
 import service.OptionService;
+import service.OrderService;
 import service.QnaService;
 
 //http://localhost:8090/gogipam/main.do
@@ -74,7 +76,7 @@ public class MainController {
 	private CartService cartService;
 	private QnaService qnaService;
 	private CardService cardService;
-
+	private OrderService orderService;
 
 	///////////////////////////////////////////////// Service 선언
 	public MainController() {
@@ -110,6 +112,10 @@ public class MainController {
 	
 	public void setCardService(CardService cardService) {
 		this.cardService = cardService;
+	}
+	
+	public void setOrderService(OrderService orderService) {
+		this.orderService = orderService;
 	}
 	///////////////////////////////////////////////////// setService 선언
 
@@ -624,20 +630,43 @@ public class MainController {
 		mav.addObject("userInfo", memberService.infoUserProcess(member_id));
 		// 적립금 사용과 카드 저장, 읽기를 위한 memberInfo 정보 출력 ?
 		mav.addObject("cardInfo", cardService.selectCardProcess(member_id));
+		mav.addObject("cardDefault", cardService.viewDefaultCardProcess(member_id));
 		mav.addObject("cartList", cartList);
 		mav.addObject("itemInfo", itemInfo);
 		mav.addObject("optionInfo", optionInfo);
 		mav.addObject("totalPrice", totalPrice);
+		mav.addObject("addMileage", totalPrice * 0.03);
 		mav.setViewName("purchase");
 		
 		return mav;
 		
 	}
 	
-	@RequestMapping(value = "card_insert.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/purchase_insert.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<OrderDTO> orderInsert(OrderDTO orderDto) {
+		orderService.orderSeqProcess();
+		return orderService.orderInsertProcess(orderDto);
+	}
+	
+	@RequestMapping(value = "/card_insert.do", method = RequestMethod.POST)
 	@ResponseBody
 	public List<CardDTO> cardInsert(CardDTO cardDto) {
 		return cardService.insertCardProcess(cardDto);
+	}
+	
+	@RequestMapping(value = "/card_delete.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<CardDTO> cardDelete(CardDTO cardDto) {
+		return cardService.deleteCardProcess(cardDto);
+	}
+	
+	@RequestMapping(value = "/card_default.do", method = RequestMethod.POST)
+	@ResponseBody
+	public CardDTO cardFault(CardDTO cardDto) {
+		cardService.selectnonDefaultProcess(cardDto);
+		cardService.selectDefaultProcess(cardDto);
+		return cardService.viewDefaultCardProcess(cardDto.getMember_id());
 	}
 	/////////////////////////////////////////////////////////////////// 상품 주문관련 매핑
 

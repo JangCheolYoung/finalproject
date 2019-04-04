@@ -24,6 +24,7 @@
 <link rel="stylesheet" href="css/navbar.css">
 <link rel="stylesheet" href="css/list.css">
 <style>
+/* html {overflow:hidden;} */
 
 body {
    padding-right: 0 !important;

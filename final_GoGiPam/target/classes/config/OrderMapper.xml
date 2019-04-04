@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="order">
+	<select id="orderList" parameterType="String" resultType="dto.OrderDTO">
+		select * from orders where member_id = #{member_id}
+	</select>
+	
+	<select id="orderSeq" resultType="int">
+		select (LPAD(order_seq.NEXTVAL,4,0)) from dual
+	</select>
+	
+	<insert id="orderInsert" parameterType="dto.OrderDTO">	
+		insert into orders 
+		values(#{order_num}||'-'||(to_char(sysdate, 'MMDD'))||'-'||(LPAD(order_seq.currVAL,4,0)), #{item_key}, #{order_amount}, #{total_price},
+				#{option_key}, #{member_id}, #{order_method}, #{order_status}, sysdate)
+	</insert>
+	
+	<update id="orderStatusUpdate" parameterType="String">
+		update orders set order_status = #{order_status} where member_id = #{member_id} and order_num = #{order_num}
+	</update>
+	
+	<delete id="orderDelete" parameterType="dto.OrderDTO">
+		delete from orders where member_id = #{member_id} and order_num = #{order_num} 
+	</delete>
+</mapper>

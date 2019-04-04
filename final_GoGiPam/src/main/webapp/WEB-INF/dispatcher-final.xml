@@ -33,6 +33,7 @@
 			<value>classpath:config/FaqMapper.xml</value>
 			<value>classpath:config/QnaMapper.xml</value>
 			<value>classpath:config/CardMapper.xml</value>
+			<value>classpath:config/OrderMapper.xml</value>
 		</list>
 	</property>
 	</bean>
@@ -82,19 +83,23 @@
 	</bean>
 	
 	<bean id="fdao" class="dao.FaqDAOImp">
-		<property name="sqlSession" ref="sqlSession" />
+		<property name="sqlSession" ref="sqlSession"></property>
 	</bean>
 
 	<bean id="cdao" class="dao.CartDAOImp">
-		<property name="sqlSession" ref="sqlSession" />
+		<property name="sqlSession" ref="sqlSession"></property>
 	</bean>
 	
 	<bean id="qdao" class="dao.QnaDAOImp">
-		<property name="sqlSession" ref="sqlSession" />
+		<property name="sqlSession" ref="sqlSession"></property>
 	</bean>
 	
 	<bean id="cardDao" class="dao.CardDAOImp">
-		<property name="sqlSession" ref="sqlSession" />
+		<property name="sqlSession" ref="sqlSession"></property>
+	</bean>
+
+	<bean id="orderDao" class="dao.OrderDAOImp">
+		<property name="sqlSession" ref="sqlSession"></property>
 	</bean>
 
 	<!-- [8] Service 빈 선언 -->
@@ -130,6 +135,10 @@
 		<property name="cardDao" ref="cardDao"></property>
 	</bean>
 	
+	<bean id="orderService" class="service.OrderServiceImp">
+		<property name="orderDao" ref="orderDao"></property>
+	</bean>
+	
 	<!-- 파일 업로드 시작 -->
 	<!-- 첨부 파일의 임시기억 장치 경로 설정 , 현 버전에선 이 작업을 안해주어도 됨-->
 	<bean id="uploadDirResource"
@@ -156,6 +165,7 @@
 		<property name="cartService" ref="cartService"></property>
 		<property name="cardService" ref="cardService"></property>
 		<property name="qnaService" ref="qnaService"></property>
+		<property name="orderService" ref="orderService"></property>
 	</bean>
 	
 	<!-- interceptor -->
@@ -171,17 +181,17 @@
 	</mvc:interceptors>
 	
 	<!-- [10] View 빈 선언 -->
-	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
-	<!-- 우선순위를 지정. bean id 값하고 setViewName에서 선언한 값이 일치하는 빈을 실행하라라는 뜻 -->
+	<!-- <bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	우선순위를 지정. bean id 값하고 setViewName에서 선언한 값이 일치하는 빈을 실행하라라는 뜻
 		<property name="order" value="1"></property>
-	</bean>
+	</bean> -->
 	
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<!-- InternalResourceViewResolver는 항상 마지막에 해야함, 일치하는 값을 못찾아버리면 종료해버림 -->
 		<property name="prefix" value="/WEB-INF/view/" />
 		<property name="suffix" value=".jsp" />	
-		<property name="order" value="2" />	
+<!-- 		<property name="order" value="2" />	 -->
 	</bean>
 	
 </beans>

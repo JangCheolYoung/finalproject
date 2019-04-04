@@ -8,6 +8,15 @@ public class MemberDTO {
 	private String member_name;
 	private String member_tel;
 	private Date join_date;
+	private int member_mileage;
+
+	public int getMember_mileage() {
+		return member_mileage;
+	}
+
+	public void setMember_mileage(int member_mileage) {
+		this.member_mileage = member_mileage;
+	}
 
 	public String getMember_id() {
 		return member_id;

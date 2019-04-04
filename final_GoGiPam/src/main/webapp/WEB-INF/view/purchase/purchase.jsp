@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.util.Date" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -290,6 +293,24 @@
 		height: 100%;
 	}
 	
+	#DefaultCardName {
+   	 	height: 26px;
+    	font-size: 15px;
+   		display: inline-block;
+   	 	margin-top: 18px;
+   	 	margin-right: 20px;
+   	 	float : right;
+	}
+	
+	#mileageUsingBtn {
+    	border: none;
+    	width: 100px;
+    	background-color: black;
+    	color: white;
+    	font-size: 16.8px;
+    	text-align: center;
+	}
+	
 	button:focus {
 		outline: 0
 	}
@@ -297,43 +318,225 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		//사용 전 적립금 상태 보여주기
+		$('#mileageValueShow').text('0');
+		
 		//카드 선택 버튼 누를시 선택 모달 출력
 		$('#cardSelector').on('click', function() {
 			$('#cardModal').modal();
 		});
 		
-		//선택 모달에서 등록 모달 누를시 기존 모달 닫고 등록 모달 출력
-		$('.card_AddBtn').on('click', function() {
+		//선택 모달에서 등록 모달 누를시 기존 모달 닫고 등록 모달 출력, 동적이벤트
+		$(document).on('click','.card_AddBtn', function() {
 			$('#cardModal2').modal();
 			$('#cardModal').modal('hide');
 		});
 		
 		//등록모달 내에 카드별명 이외 란에 문자입력 차단
-		 $("#card_password, #card_month, #card_year, #card_number, #card_birthday").keyup(function(event) { // 키다운의 경우 앞 한글자를 못받음
+		 $("#card_password, #card_month, #card_year, #card_number, #card_birthday, #mileageVal").keyup(function(event) { // 키다운의 경우 앞 한글자를 못받음
 	         if (!(event.keyCode >=37 && event.keyCode<=40)) { // del, backspace 허용하기 위해
 	             var inputVal = $(this).val();
 	             $(this).val(inputVal.replace(/[^0-9]/gi,''));
 	         }
 	     });
 		
-		//강제로 문자 입력 후 등록 누를시 차단하기 위한 정규식 (오직 숫자만)
-		var cardchk = /[^0-9]/g;
+		//숫자 검사를 위한 정규식, 년도, 월일을 위한 정규식, 생년월일 6자리를 위한 정규식
+		var cardchk = /^([0-9]{16})/;
+		var yearchk = /^([0-9]{1})([0-9]{1})/;
+		var monthchk = /^(0[1-9]|1[012])/;
+		var passWordchk = /^([0-9]{1,2})/;
+		var birthchk = /^(?:[0-9]{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[1,2][0-9]|3[0,1]))$/;
 		
 		$('.card_RegisterBtn').on('click', function() {
+			var card_title = $('#card_nickname').val();
+			var card_number = $('#card_number').val();
+			var card_password = $('#card_password').val();
+			var card_exp_month = $('#card_month').val();
+			var card_exp_year = $('#card_year').val();
+			var card_birthday = $('#card_birthday').val();
+			var member_id = '<%= (String) session.getAttribute("member_id")%>';
+			
 			if($('#card_nickname').val() != '' &&
-			   $('#card_birthday').val() != '' && cardchk.test(($('#card_birthday').val())) == true &&
-			   $('#card_number').val() != '' && cardchk.test(($('#card_number').val())) == true &&
-			   $('#card_year').val() != '' && cardchk.test(($('#card_year').val())) == true &&
-			   $('#card_month').val() != '' && cardchk.test(($('#card_month').val())) == true && 
-			   $('#card_password').val() != '' && cardchk.test(($('#card_password').val())) == true) {
-			   		alert('앙 기모링');				
+			   $('#card_birthday').val() != ''  && birthchk.test($('#card_birthday').val()) == true &&
+			   $('#card_number').val() != '' && cardchk.test($('#card_number').val()) == true &&
+			   $('#card_year').val() != '' && yearchk.test($('#card_year').val()) == true &&
+			   $('#card_month').val() != '' && monthchk.test($('#card_month').val()) == true && 
+			   $('#card_password').val() != '' && passWordchk.test($('#card_password').val()) == true) {
+			   		$.ajax({
+			   			url: "card_insert.do",
+			   			type: "POST",
+			   			data: {
+			   				"card_title" : card_title,
+			   				"card_number" : card_number,
+			   				"card_password" : card_password,
+			   				"card_exp_month" : card_exp_month,
+			   				"card_exp_year" : card_exp_year,
+			   				"card_birthday" : card_birthday,
+			   				"member_id" : member_id			   				
+			   			},
+			   			success : function(res) {
+			   				$('#cardModal2').modal('hide');
+			   				$('#card_nickname').val('');
+			   				$('#card_birthday').val('');
+			   				$('#card_number').val('');
+			   				$('#card_password').val('');
+			   				$('#card_month').val('');
+			   				$('#card_year').val('');
+			   				$('#cardinsertSuccess').modal();
+			   				cardList(res);
+			   			},
+			   			error : function() {
+			   				$('#cardErrorModal1').modal();
+			   			}
+			   		});				
 			} else {
 				 $('#cardErrorModal1').modal();
-				
-			}
+			} 
 			   
+		});////////////////////////////////////////////////////////////// 카드 입력하기
+		
+		
+		$('.card_DeleteBtn').on('click', function() {
+			var selected_cardNum = $('input:radio[name="cardgroup"]:checked').val();
+			var member_id = '<%= (String) session.getAttribute("member_id") %>';
+			var card_defaultNum = $('#defaultNumchk').text();
+			
+			if(typeof selected_cardNum ===  "undefined")
+				$('#cardErrorModal3').modal();		
+			else			
+				$.ajax({
+					url: "card_delete.do",
+					type: "POST",
+					data: {
+						"card_num_seq" : selected_cardNum,
+						"member_id" : member_id,
+					},
+					beforeSend: function() {
+						if(card_defaultNum == selected_cardNum)
+						$('#DefaultCardName').text('기본카드 없음');			
+					}
+					,
+					success : cardList,
+					error : function() {
+						$('#cardErrorModal3').modal();
+					}
+				});	
+		});////////////////////////////////////////////////////////////// 카드 삭제하기
+		
+		
+		function cardList(res) {
+			$('#cardModal_cards').empty();
+			
+			$.each(res, function(index, value) {
+				var source = '<div class="cardList {{card_num_seq}}" style="display: inline-block; float: left; margin-left: 65px; margin-top: 42px;">'
+          					 + '<div class="card_Active">'
+          					 + '<div class="card_ActiveTitle">'
+      						 + '<input type="radio" name="cardgroup" value="{{card_num_seq}}" />'
+      						 + '</div>'
+      						 + '<div class="card_ActiveTitle">{{card_title}}</div>'
+      						 + '</div>'
+      					     + '</div>'
+      					     		     				
+      			var template = Handlebars.compile(source);
+      			$('#cardModal_cards').append(template(value));
+      			
+			});
+				
+			var addbtn = '<button class="card_AddBtn" type="button" style="display: inline-block"></button>';
+				$('#cardModal_cards').append(addbtn);
+   					
+ 
+   				
+		}///////////////////////////////////////////////////////////////// 실시간 검사
+		
+		$('.card_SubmitBtn').on('click', function() {
+			var selected_cardNum = $('input:radio[name="cardgroup"]:checked').val();
+			var member_id = '<%= (String) session.getAttribute("member_id") %>';
+			
+			if(typeof selected_cardNum === "undefined")
+				$('#cardErrorModal3').modal();
+			else
+				$.ajax({
+					url: "card_default.do",
+					type: "POST",
+					data: {
+						"card_num_seq" : selected_cardNum,
+						"member_id" : member_id,
+					},
+					success : function(res) {
+						$('#cardDefaultSuccess').modal();
+						$('#defaultNumchk').text(selected_cardNum);
+						$('#DefaultCardName').text(res.card_title);
+						$('#cardModal').modal('hide');
+					},
+					error : function() {
+						$('#cardErrorModal3').modal();
+					}
+				});
+		});/////////////////////////////////////////////////////////////////// 기본값 검사
+		
+		$('.mileageSelector').on('click', function() {
+			$('#mileageModal').modal();
 		});
-		 
+		
+		$('#mileageUsingBtn').on('click', function() {
+			var mileagechk = /^([0-9])/;
+			var usingMileage = parseInt($('#mileageVal').val());
+			var memMileage = parseInt($('#memMileage').text());
+			
+			//마일리지를 설정하면 값이 바뀌어야 한다.
+			if(memMileage >= usingMileage && mileagechk.test(usingMileage) == true) {
+				$('#useMileage').text(usingMileage);
+				$('#mileageValueShow').text(usingMileage);
+				$('#final_Price').text(parseInt($('#total_price').text()) + 2500 - usingMileage);
+				$('#mileageModal').modal('hide');
+			} else {
+				$('#mileageError').modal();
+			}
+		});
+		
+		$('#purchase_submitBtn').on('click', function() {
+			var cardOrDeposit = $('input:radio[name="radio-card/deposit"]:checked').val();
+			
+			alert(cardOrDeposit);
+			if(cardOrDeposit == null) {
+				$('#payMethodError').modal();
+			}
+			
+			if(cardOrDeposit == "deposit") {
+					
+			}
+			
+			if(cardOrDeposit == "card") {
+				var status = "주문확인";
+				var tel = '${userInfo.member_tel}';
+				var order_num = tel.substring(tel.length-4, tel.length);
+				var member_id = '<%= session.getAttribute("member_id")%>';
+				
+				
+				if('${cardDefault.card_num_seq}' == null)
+					$('#cardError').modal();
+				else {
+					$.ajax({
+						url: "purchase_insert.do",
+						type: "POST",
+						data : {
+							"order_method" : cardOrDeposit,
+							"order_status" : status,
+							"member_id" : member_id,
+							"order_num" : order_num,
+							"item_key" : '10',
+							"option_key" : '10',
+							"order_amount" : '10',
+							"total_price" : 10							
+						},
+						success : alert("기모링")
+					});
+				}
+					
+			}
+			
+		});
 	})
 </script>
 </head>
@@ -353,12 +556,24 @@
 		
 		<div class="paySelector" style="border-bottom: none; margin-top: 20px">
 			<div class="payRadio">
-				<input type="radio" name="radio-card/deposit" id="radio-card">
+				<input type="radio" name="radio-card/deposit" id="radio-card" value="card">
 			</div>
 			
 			<div class="payTitle">
 				카드 결제
 			</div>
+			
+			<span id="defaultNumchk" style="display: none">${cardDefault.card_num_seq}</span>
+			<span id="DefaultCardName">
+				<c:choose>
+					<c:when test="${cardDefault.card_num_seq == null}">
+						기본카드 없음
+					</c:when>
+					<c:otherwise>
+						${cardDefault.card_title}
+					</c:otherwise>
+				</c:choose>				
+			</span>
 			
 			<button class="cardSelector" id="cardSelector" type="button" style="float: right;">
 				결제카드 선택
@@ -369,7 +584,7 @@
 		
 		<div class="paySelector" style="border-top: none; clear: both; position: relative; top: -2px;">
 			<div class="payRadio">
-				<input type="radio" name="radio-card/deposit" id="radio-deposit">
+				<input type="radio" name="radio-card/deposit" id="radio-deposit" value="deposit">
 			</div>
 			
 			<div class="payTitle">
@@ -399,10 +614,10 @@
 		<div class="mileage_box">
 			<div style="margin-top: 16px; margin-left: 20px; margin-bottom: 16px;">
 				<button type="button" class="mileageSelector">적립금 사용</button>
-				<span style="font-size: 15px; line-height: 30px;">기2222모리 원 사용</span>
+				<span style="font-size: 15px; line-height: 30px;"><span id="useMileage">0</span> 원 사용</span>
 			
 				<div style="display: inline-block; line-height: 30px; font-size: 18px; font-weight: bold; float: right; margin-right: 20px;">
-					상품 구매 시 200 원 적립
+					상품 구매 시  <span id="add_mileage">${Math.round(addMileage)}</span>원 적립
 				</div>
 			</div>
 			
@@ -425,12 +640,12 @@
 			</div>
 		</c:forEach>	
 			<div class="payitemSummary">
-				<div class="paySummaryPrice" style="margin-left: 125px;">
+				<div class="paySummaryPrice" style="margin-left: 185px;">
 					<div class="itemPriceTitle">
 						상품총합
 					</div>
 					
-					<div class="itemPriceValue">
+					<div class="itemPriceValue" id="total_price">
 						${totalPrice}
 						<span style="font-size: 13px;">원</span>
 					</div>		
@@ -460,10 +675,12 @@
 						적립금
 					</div>
 					
-					<div class="itemPriceValue">
-						
-						<span style="font-size: 13px;">원</span>
+					<div class="itemPriceValue" id="mileageValueShow"
+						style="display: inline-block; position: relative; top: -7px">
+						0
 					</div>		
+					<div style="font-size: 13px; display: inline-block;  position: relative; top: -7px; 
+							font-weight: bold;">원</div>
 				</div>
 				
 				<div class="itemPlusMinus" style="margin-left: 35px;">
@@ -476,8 +693,10 @@
 					</div>
 					
 					<div class="itemPriceValue" style="color: red">
+						<div id="final_Price" style="display: inline-block;">
 						${totalPrice + 2500 - 0}
-						<span style="font-size: 13px; color: black">원</span>
+						</div>
+						<div style="display: inline-block; font-size: 13px; color: black">원</div>
 					</div>		
 				</div>	
 			</div>
@@ -488,7 +707,8 @@
 		</div>
 		
 		<div class="delivery_box">
-			기...이..모
+			오늘 주문한 상품은 <c:set var="deliveryDay" value = "<%=new Date(new Date().getTime() + 60*60*24*1000*2)%>" />
+			<fmt:formatDate value="${deliveryDay}" pattern="yyyy-MM-dd" /> 에 배송 될 예정입니다.
 		</div>
 		
 		<div class="checklist_box" style="margin-top: 43px;">
@@ -531,17 +751,19 @@
 	          	<span style="font-size: 20px; font-weight: bold;">카드 선택</span>
 	          </div>
 	          
-	          <div class="cardModal_addBtn" 
+	          <div class="cardModal_addBtn" id="cardModal_cards"
 	          	style="overflow: auto; width: 130%; height: 500px; margin-right: auto; margin-left: auto;">
-	          	<div style="display: inline-block; float: left; margin-left: 65px; margin-top: 42px;">
+	          	<c:forEach items="${cardInfo}" var="cardList">
+	          	<div class="cardList ${cardList.card_num_seq}" style="display: inline-block; float: left; margin-left: 65px; margin-top: 42px;">
 	          		<div class="card_Active">
 	          			<div class="card_ActiveTitle">
-	          				<input type="radio" name="cardgroup" />
+	          				<input type="radio" name="cardgroup" value="${cardList.card_num_seq}" />
 	          			</div>
-	          			<div class="card_ActiveTitle">시발죽자</div>
+	          			<div class="card_ActiveTitle">${cardList.card_title}</div>
 	          		</div>
-	          	</div>	
-	          	<button class="card_AddBtn" type="button"></button>
+	          	</div>
+	      		</c:forEach>
+	          	<button class="card_AddBtn" type="button" style="display: inline-block"></button>	          
 	          </div>
 	          
 	        </div>
@@ -609,11 +831,11 @@
 	          			<input id="card_year" type="text" maxlength="2" 
 	          				style="width: 137px; height: 38px; padding-left: 15px; font-size: 15px;
 	          				 border: 1px solid black; margin-left: 23px; margin-top: 25px;"
-	          				 placeholder="년도 입력">
+	          				 placeholder="년도 입력" />
 	          			<input id="card_month" type="text" maxlength="2" 
 	          				style="width: 137px; height: 38px; padding-left: 15px; font-size: 15px;
 	          				 border: 1px solid black; margin-left: 23px; margin-top: 25px;"
-	          				 placeholder="월 입력"/>
+	          				 placeholder="월 입력" />
 	          		</div>
 	          	</div>
 	          	<div class="card_titleBox" style="border-bottom: none">
@@ -624,7 +846,7 @@
 	          			<input id="card_password" type="password" maxlength="2" 
 	          				style="width: 300px; height: 38px; padding-left: 15px; font-size: 15px;
 	          				 border: 1px solid black; margin-left: 23px; margin-top: 25px;"
-	          				 placeholder="비밀번호 앞 2자리 입력">
+	          				 placeholder="비밀번호 앞 2자리 입력"/>
 	          		</div>
 	          	</div>
 	          </div>
@@ -639,6 +861,7 @@
 	</div>
 </div>
 
+
 <!-- 카드 등록 오류 시 모달 (잘못 입력한 경우) -->
 <div class="modal modal-center fade" id="cardErrorModal1" role="dialog">
 	<div class="modal-dialog modal-center" role="document">
@@ -648,6 +871,124 @@
 	        </div>
 	        <div class="modal-body" style="text-align: center; font-size: 15px;">
 	          	<p id="modaltext">빈 칸이 있거나 잘못 입력하셨습니다. 확인해주세요.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<!-- 카드 중복처리..? -->
+
+<!-- 카드 등록 오류 시 모달 (잘못 입력한 경우) -->
+<div class="modal modal-center fade" id="cardErrorModal3" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">카드 정보를 하나 선택 후 실행하여 주세요.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<!-- 카드 등록 정상 모달 -->
+<div class="modal modal-center fade" id="cardinsertSuccess" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">카드가 등록되었습니다.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<!-- 카드 기본값 등록 정상 모달 -->
+<div class="modal modal-center fade" id="cardDefaultSuccess" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">기본 카드가 등록되었습니다.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<!-- 적립금 등록 모달 -->
+<div class="modal modal-center fade" id="mileageModal" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<div id="modaltext">사용하실 적립금을 입력하여주세요.</div> 
+	          	<div>현재 적립금 : <span id="memMileage">${userInfo.member_mileage}</span></div>
+	          	<input id="mileageVal" type="text" placeholder="숫자만 입력하세요." 
+	          		style="text-align: center; vertical-align: middle; border: 1px solid black; margin-top: 10px;">
+	          	<button type="button" id="mileageUsingBtn" style="vertical-align: middle; margin-top: 10px;">사용하기</button>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<!-- 적립금을 올바르게 쓰지 않았거나 보유한 적립금보다 더 많이 사용했을 경우 -->
+<div class="modal modal-center fade" id="mileageError" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">보유한 적립금을 확인 후 다시 입력해주세요.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<!-- 결제 방법을 택하지 않고 활정 버튼을 누른 경우 -->
+<div class="modal modal-center fade" id="payMethodError" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">결제 방법을 선택하여 주세요.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<!-- 결제방법을 카드를 택하고 기본카드를 택하지 않고 확정 버튼을 누른 경우 -->
+<div class="modal modal-center fade" id="cardError" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modaltext">먼저 카드를 등록 후 기본 카드로 선택하셔야 합니다.</p>
 	        </div>
 	        <div class="modal-footer" style="border-top: none;">
 	        </div>

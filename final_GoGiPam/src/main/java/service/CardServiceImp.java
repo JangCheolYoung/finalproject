@@ -23,25 +23,25 @@ public class CardServiceImp implements CardService {
 	}
 
 	@Override
-	public List<CardDTO> insertCardProcess(CardDTO cdto) {
-		cardDao.insertCard(cdto);
-		return cardDao.selectCard(cdto.getMember_id());
+	public List<CardDTO> insertCardProcess(CardDTO cardDto) {
+		cardDao.insertCard(cardDto);
+		return cardDao.selectCard(cardDto.getMember_id());
 	}
 
 	@Override
-	public List<CardDTO> deleteCardProcess(CardDTO cdto) {
-		cardDao.deleteCard(cdto);
-		return cardDao.selectCard(cdto.getMember_id());
+	public List<CardDTO> deleteCardProcess(CardDTO cardDto) {
+		cardDao.deleteCard(cardDto);
+		return cardDao.selectCard(cardDto.getMember_id());
 	}
 
 	@Override
-	public void selectDefaultProcess(CardDTO cdto) {
-		cardDao.selectDefault(cdto);
+	public void selectDefaultProcess(CardDTO cardDto) {
+		cardDao.selectDefault(cardDto);
 	}
 
 	@Override
-	public void selectnonDefaultProcess(CardDTO cdto) {
-		cardDao.selectnonDefault(cdto);
+	public void selectnonDefaultProcess(CardDTO cardDto) {
+		cardDao.selectnonDefault(cardDto);
 	}
 
 	@Override

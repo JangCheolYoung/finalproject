@@ -3,13 +3,22 @@ package dto;
 public class CardDTO {
 	private int card_num_seq; // 시퀸스
 	private String card_title;
-	private int card_number; // 카드 번호
+	private long card_number; // 카드 번호
 	private int card_password;
 	private int card_exp_month;
 	private int card_exp_year;
 	private int card_birthday;
 	private String member_id;
+	private int card_default;
 	
+	public int getCard_default() {
+		return card_default;
+	}
+
+	public void setCard_default(int card_default) {
+		this.card_default = card_default;
+	}
+
 	public CardDTO() {
 		// TODO Auto-generated constructor stub
 	}
@@ -30,11 +39,11 @@ public class CardDTO {
 		this.card_title = card_title;
 	}
 
-	public int getCard_number() {
+	public long getCard_number() {
 		return card_number;
 	}
 
-	public void setCard_number(int card_number) {
+	public void setCard_number(long card_number) {
 		this.card_number = card_number;
 	}
 

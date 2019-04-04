@@ -507,7 +507,7 @@ $(document).ready(function () {
 	
 		var num = $(this).attr('class').split(' ')[1]; // num을 받아옴
 		
-		var member_id = 'nananan1213@naver.com'; // 후에 세션으로 처리할 것
+		var member_id = '<%= (String) session.getAttribute("member_id")%>';
 		var receiver_name = $('.adrtable_info1_box.receiver_name_'+num).text().trim();
 		var receiver_tel = $('.adrtable_info1_box.receiver_tel_'+num).text().trim();
 		var post_num = $('.adrtable_info2_box.post_num_'+num).text().trim();
@@ -563,24 +563,24 @@ $(document).ready(function () {
 	///////////////////////////////////////////////////////////////////// 수정하기
 	
 	$(document).on('click','#adrDeleteBtn', function() { // 동적으로 받을 때.. 클릭 이벤트가 일어난 버튼에서 기능을 수행해라
-		var member_id = 'nananan1213@naver.com';
+		var member_id = '<%= (String) session.getAttribute("member_id")%>';
 		var num = parseInt($(this).attr('class').split(' ')[1]);
-
-		$.ajax({
-			type: "POST",
-			url: "adr_delete.do",
-			data: {
-				'address_num' : num,
-				'member_id' : member_id
-			},
-			beforeSend : function() { // ajax가 요청되기 전 처리 될 때 삭제가 되버려서 기본값으로 설정한 주소가 보이는 부분만 지워짐
-					$('#orderBox_receiver_name').text('');
-					$('#orderBox_receiver_tel').text('');
-					$('#orderBox_address').text('');
-					$('#orderBox_address_detail').text('');
-			},
-			success: addressList
-		});
+		
+			$.ajax({
+				type: "POST",
+				url: "adr_delete.do",
+				data: {
+					'address_num' : num,
+					'member_id' : member_id
+				},
+				beforeSend : function() { // ajax가 요청되기 전 처리 될 때 삭제가 되버려서 기본값으로 설정한 주소가 보이는 부분만 지워짐
+						$('#orderBox_receiver_name').text('');
+						$('#orderBox_receiver_tel').text('');
+						$('#orderBox_address').text('');
+						$('#orderBox_address_detail').text('');
+				},
+				success: addressList
+			});
 	});
 	///////////////////////////////////////////////////////////////////// 삭제하기
 	
@@ -677,20 +677,23 @@ $(document).ready(function () {
 	
 	$('#adrselect_submitBtn').on('click', function() {
 		var num = $('input:radio[name="adrtable_radio"]:checked').val();
-		var member_id="nananan1213@naver.com" // 나중에 세션으로
+		var member_id= '<%= (String) session.getAttribute("member_id") %>';
 
-		$.ajax({
-			type: "POST",
-			url: "adr_select.do",
-			data: {
-				'address_num' : Number(num),
-				'member_id' : member_id,
-			},
-			success: defaultAdrset,
-			error: function() {
-				 $("#errorModal").modal();
-			}
-		});		
+		if(typeof num === "undefined")
+			$("#errorModal").modal();
+		else
+			$.ajax({
+				type: "POST",
+				url: "adr_select.do",
+				data: {
+					'address_num' : Number(num),
+					'member_id' : member_id,
+				},
+				success: defaultAdrset,
+				error: function() {
+					 $("#errorModal").modal();
+				}
+			});		
 	});
 	
 	function defaultAdrset(res) {
