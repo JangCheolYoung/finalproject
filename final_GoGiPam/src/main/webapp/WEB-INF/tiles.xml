@@ -88,4 +88,14 @@
 		<put-attribute name="body"
 					   value="/WEB-INF/view/purchase/purchase.jsp"></put-attribute>
 	</definition>
+	
+	<definition name = "payOK" extends = "main">
+		<put-attribute name="body"
+					   value="/WEB-INF/view/payOK.jsp"></put-attribute>
+	</definition>
+	
+	<definition name = "memOK" extends = "main">
+		<put-attribute name="body"
+					   value="/WEB-INF/view/memOK.jsp"></put-attribute>
+	</definition>
 </tiles-definitions>     

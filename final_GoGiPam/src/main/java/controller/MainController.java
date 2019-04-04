@@ -341,9 +341,14 @@ public class MainController {
 	@RequestMapping(value = "/memjoin.do", method = RequestMethod.POST)
 	public String memjoinup(MemberDTO mdto) {
 		memberService.insertProcess(mdto);
-		return "redirect:/main.do";
+		return "redirect:/memOK.do";
 	}
 
+	@RequestMapping(value = "/memOK.do")
+	public String memOK(HttpSession session) {
+		return "memOK";
+	}
+	
 	@RequestMapping(value = "/dupidchk.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String dupidchk(String member_id) {
@@ -570,6 +575,7 @@ public class MainController {
 		mav.addObject("adrList", addressService.selectAddressProcess((String) session.getAttribute("member_id")));
 		mav.addObject("defaultAdr", addressService.viewdefaultAddressProcess((String) session.getAttribute("member_id")));
 		mav.addObject("infoUser", memberService.infoUserProcess((String) session.getAttribute("member_id")));
+		mav.addObject("countCart", cartService.countCartProcess((String) session.getAttribute("member_id")));
 		mav.setViewName("order");
 		return mav;
 	}
@@ -631,6 +637,7 @@ public class MainController {
 		// 적립금 사용과 카드 저장, 읽기를 위한 memberInfo 정보 출력 ?
 		mav.addObject("cardInfo", cardService.selectCardProcess(member_id));
 		mav.addObject("cardDefault", cardService.viewDefaultCardProcess(member_id));
+		mav.addObject("addressDefault", addressService.viewdefaultAddressProcess(member_id));
 		mav.addObject("cartList", cartList);
 		mav.addObject("itemInfo", itemInfo);
 		mav.addObject("optionInfo", optionInfo);
@@ -645,7 +652,15 @@ public class MainController {
 	@RequestMapping(value = "/purchase_insert.do", method = RequestMethod.POST)
 	@ResponseBody
 	public List<OrderDTO> orderInsert(OrderDTO orderDto) {
+		memberService.update_useMileageProcess(orderDto);
+		/*cartService.deleteAllCartProcess(orderDto.getMember_id());*/
 		return orderService.orderInsertProcess(orderDto);
+	}
+	
+	@RequestMapping(value = "/payOK.do")
+	public String payOK(HttpSession session) {
+		cartService.deleteAllCartProcess((String) session.getAttribute("member_id"));
+		return "payOK";
 	}
 	
 	@RequestMapping(value = "/card_insert.do", method = RequestMethod.POST)

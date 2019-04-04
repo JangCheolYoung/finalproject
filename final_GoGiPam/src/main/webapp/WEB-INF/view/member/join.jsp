@@ -79,32 +79,6 @@ $(document).ready(function() {
 	var namechk = /^[가-힣]{2,10}$/;
 	var telchk = /^(010|011|016|017|019|02|031|032|033|041|042|043|044|051|052|053|054|055|061|062|063|064)([0-9]{3,4})([0-9]{4})/;
 
-	/* $('#joinsubmitBtn').on('click', function() {
-		var idtest = idchk.test($('#member_id').val());
-		if (idtest == false) {
-			alert("이메일 양식에 맞게 입력하여야 합니다.");
-			return false;
-		}
-
-		var pwdtest = pwdchk.test($('#member_pwd').val());
-		if (pwdtest == false) {
-			alert("영문, 숫자, 특수문자 1글자 이상 포함하여 8~20글자여야 합니다.");
-			return false;
-		}
-
-		var nametest = namechk.test($('#member_name').val());
-		if (nametest == false) {
-			alert("한글 2~10글자 여야합니다.");
-			return false;
-		}
-
-		var teltest = telchk.test($('#member_tel').val());
-		if (teltest == false) {
-			alert("- 를 뻬거나 형식에 맞게 입력하여야합니다.");
-			return false;
-		}
-	}); */
-		
 	$("#member_name").blur(function() {
 		if(namechk.test($('#member_name').val()) != true){
 		    $('#name_status').text('2~10글자의 한글만 가능합니다.');
@@ -173,31 +147,34 @@ $(document).ready(function() {
 			url: 'dupidchk.do',
 			data: {'member_id' : member_id},
 			success: function(res) {
-				/* alert(res); */
 				 if(res == 'f') {
+					 // 회원가입이 가능함, 중복하는 경우도 없고 유효성에도 적합
 					if(idchk.test($('#member_id').val()) == true) {
-						$("#modal2text").text('회원가입 가능합니다.');
+						$("#CorrectIDModal").modal();
 						memjoinForm.member_id.readOnly = true; /* 회원가입 가능시 읽기전용으로 처리해버려 더 이상 수정 불가 */
 						hasidChk = 1;
 					} else {
+					// 중복하는 경우가 아니지만 유효성 탈락
 						if(idchk.test($('#member_id').val()) == false)
-						$("#modal2text").text('양식에 맞게 아이디를 입력해주셔야 합니다.');
+						$("#WrongIDModal").modal();
 						hasidChk = 0;
 					}
 				 }
 				 
 				if(res == 't') {
+					// 중복하는 아이디 입력시
 					if(idchk.test($('#member_id').val()) == true) {
+							$('#dupModal').modal();
 						hasidChk = 0;
 					} else {
 						if(idchk.test($('#member_id').val()) == false)
-						$("#modal2text").text('양식에 맞게 아이디를 입력해주셔야 합니다.');
+							$("#WrongIDModal").modal();
 						hasidChk = 0;
 					}
 				}	
 			},
 			error: function(){
-				$("#modal2text").text('예기치 못한 오류가 일어났습니다. 관리자에게 문의하세요.');	
+				$("#ExceptionError").modal();
 			}
 		});
 	});
@@ -211,31 +188,31 @@ $(document).ready(function() {
 			url: 'duptelchk.do',
 			data: {'member_tel' : member_tel},
 			success: function(res) {
-				/* alert(res); */
 				 if(res == 'f') {
 					if(telchk.test($('#member_tel').val()) == true) {
-						$("#modal3text").text('회원가입 가능합니다.');
+						$('#CorrectTelModal').modal();
 						memjoinForm.member_tel.readOnly = true; /* 회원가입 가능시 읽기전용으로 처리해버려 더 이상 수정 불가 */
 						hasTelChk = 1;
 					} else {
 						if(telchk.test($('#member_tel').val()) == false)
-						$("#modal3text").text('양식에 맞게 전화번호를 입력해주셔야 합니다.');
+						$("#WrongTelModal").modal();
 						hasTelChk = 0;
 					}
 				 }
 				 
 				if(res == 't') {
 					if(telchk.test($('#member_tel').val()) == true) {
+						$('#dupModal').modal();
 						hasTelChk = 0;
 					} else {
 						if(telchk.test($('#member_tel').val()) == false)
-						$("#modal3text").text('양식에 맞게 전화번호를 입력해주셔야 합니다.');
+						$("#WrongTelModal").modal();
 						hasTelChk = 0;
 					}
 				}	
 			},
 			error: function(){
-				$("#modal3text").text('예기치 못한 오류가 일어났습니다. 관리자에게 문의하세요.');	
+				$("#ExceptionError").modal();	
 			}
 		});
 	});
@@ -248,8 +225,7 @@ $(document).ready(function() {
 		   $('#member_tel').val() != '' && telchk.test($('#member_tel').val()) == true && hasidChk == 1 && hasTelChk == 1) {
 			$('#memjoinForm').submit();
 		} else {
-			$('#join_submitBtn').attr('data-toggle',"modal");
-			$('#join_submitBtn').attr('data-target',"#myModal");
+			$('#allErrorModal').modal();
 		}		
 	});	
 });
@@ -281,7 +257,7 @@ $(document).ready(function() {
 				<div id="id_status" style="margin-left: 20px;"></div>
 			</div>
 			<div>
-				<button type="button" id="dupIdchkBtn" data-toggle="modal" data-target="#myModal2"
+				<button type="button" id="dupIdchkBtn"
 					style="width: 100px; background-color: black; border-color: black; font-size: 18px;
 					color: white; float: right; margin-top: 20px; margin-right: 10px;">
 						중복확인
@@ -324,7 +300,7 @@ $(document).ready(function() {
 				<div id="tel_status" style="margin-left: 20px;"></div>
 			</div>
 			<div>
-				<button type="button" id="dupTelchkBtn" data-toggle="modal" data-target="#myModal3"
+				<button type="button" id="dupTelchkBtn"
 					style="width: 100px; background-color: black; border-color: black; font-size: 18px;
 					color: white; float: right; margin-top: 20px; margin-right: 10px;">
 						중복확인
@@ -343,49 +319,106 @@ $(document).ready(function() {
 </div>
 	
 <!-- 모달 설정 -->
-<div class="modal modal-center fade" id="myModal" role="dialog">
-	<div class="modal-dialog modal-center" role="document">
-		<div class="modal-content">
-	        <div class="modal-header" style="border-bottom: none;">
-	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
-	        </div>
-	        <div class="modal-body" style="text-align: center; font-size: 15px;">
-	          	<p id="modaltext">중복검사를 하지 않으셨거나, 빈 정보, 틀린 사항이 있습니다. 확인해주세요.</p>
-	        </div>
-	        <div class="modal-footer" style="border-top: none;">
-	          	<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-	        </div>
-	      </div>
+	<div class="modal modal-center fade" id="allErrorModal" role="dialog">
+		<div class="modal-dialog modal-center" role="document">
+			<div class="modal-content">
+				<div class="modal-header" style="border-bottom: none;">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<div class="modal-body" style="text-align: center; font-size: 15px;">
+					<p id="modaltext">중복검사를 하지 않으셨거나, 빈 정보, 틀린 사항이 있습니다. 확인해주세요.</p>
+				</div>
+				<div class="modal-footer" style="border-top: none;">
+				</div>
+			</div>
+		</div>
 	</div>
-</div>
-	  	
-<div class="modal modal-center fade" id="myModal2" role="dialog">
+
+	<div class="modal modal-center fade" id="ExceptionError" role="dialog">
 	<div class="modal-dialog modal-center" role="document">
 		<div class="modal-content">
 	        <div class="modal-header" style="border-bottom: none;">
 	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
 	        </div>
 	        <div class="modal-body" style="text-align: center; font-size: 15px;">
-	          	<p id="modal2text">아이디가 중복 되었습니다.</p>
+	          	<p id="modaltext">예기치 못한 오류가 발생했습니다. 관리자에게 문의해주세요.</p>
 	        </div>
 	        <div class="modal-footer" style="border-top: none;">
-	          	<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 	        </div>
 	    </div>
 	</div>
 </div>
 
-<div class="modal modal-center fade" id="myModal3" role="dialog">
+<div class="modal modal-center fade" id="CorrectIDModal" role="dialog">
 	<div class="modal-dialog modal-center" role="document">
 		<div class="modal-content">
 	        <div class="modal-header" style="border-bottom: none;">
 	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
 	        </div>
 	        <div class="modal-body" style="text-align: center; font-size: 15px;">
-	          	<p id="modal3text">이미 가입하신 계정이 있습니다.</p>
+	          	<p id="modaltext">회원가입 가능합니다.</p>
 	        </div>
 	        <div class="modal-footer" style="border-top: none;">
-	          	<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<div class="modal modal-center fade" id="WrongIDModal" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modal-text">양식에 맞게 아이디를 입력하셔야 합니다.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<div class="modal modal-center fade" id="CorrectTelModal" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modal-text">전화번호 사용 가능합니다.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<div class="modal modal-center fade" id="WrongTelModal" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modal-text">올바르게 전화번호를 입력하셔야 합니다.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
+	        </div>
+	    </div>
+	</div>
+</div>
+
+<div class="modal modal-center fade" id="dupModal" role="dialog">
+	<div class="modal-dialog modal-center" role="document">
+		<div class="modal-content">
+	        <div class="modal-header" style="border-bottom: none;">
+	          	<button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        <div class="modal-body" style="text-align: center; font-size: 15px;">
+	          	<p id="modal-text">이미 가입하신 계정이 있습니다.</p>
+	        </div>
+	        <div class="modal-footer" style="border-top: none;">
 	        </div>
 	    </div>
 	</div>

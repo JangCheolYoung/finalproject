@@ -12,4 +12,6 @@ public interface CartService {
 	public List<CartDTO> insertCartProcess(CartDTO cdto);
 	public int dupChkProcess(CartDTO cdto);
 	public List<CartDTO> dupOrderProcess(CartDTO cdto);
+	public void deleteAllCartProcess(String member_id);
+	public int countCartProcess(String member_id);
 }

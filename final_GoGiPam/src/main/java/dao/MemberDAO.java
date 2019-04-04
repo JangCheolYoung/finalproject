@@ -1,6 +1,7 @@
 package dao;
 
 import dto.MemberDTO;
+import dto.OrderDTO;
 
 public interface MemberDAO {
 	public MemberDTO infoUser(String member_id);
@@ -11,4 +12,6 @@ public interface MemberDAO {
 	public String findId(MemberDTO mdto);
 	public int findPw(MemberDTO mdto);
 	public void updatePwd(MemberDTO mdto);
+	public void update_useMileage(OrderDTO orderDto);
+	public void update_plusMileage(OrderDTO orderDto);
 }

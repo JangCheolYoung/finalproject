@@ -51,4 +51,15 @@ public class CartDAOImp implements CartDAO {
 		return sqlSession.selectOne("cart.dupChk", cdto);
 	}
 
+	@Override
+	public void deleteAllCart(String member_id) {
+		sqlSession.delete("cart.delAll", member_id);
+		
+	}
+
+	@Override
+	public int countCart(String member_id) {
+		return sqlSession.selectOne("cart.count", member_id);
+	}
+
 }

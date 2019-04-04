@@ -8,6 +8,9 @@ import dto.CartDTO;
 public interface CartDAO {
 	public List<CartDTO> selectCart(String member_id);
 	
+	// 카트 수량 체크
+	public int countCart(String member_id);
+	
 	// 증감 시켜주는 메소드.
 	public CartDTO updateCartAmount(Map<String, Object> map);
 	
@@ -22,4 +25,7 @@ public interface CartDAO {
 	
 	// cart에 중복된 사항이 들어올 경우 수량만 증가 시킴.
 	public List<CartDTO> dupOrderCart(CartDTO cdto);
+	
+	// 결제완료시 전부 장바구니 전부 제거
+	public void deleteAllCart(String member_id);
 }

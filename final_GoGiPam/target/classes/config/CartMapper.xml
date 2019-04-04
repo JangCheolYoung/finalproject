@@ -4,6 +4,10 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cart">
+	<select id="count" parameterType="String" resultType="int">
+		select count(*) from cart where member_id = #{member_id}
+	</select>
+
 	<select id="list" parameterType="String" resultType="dto.CartDTO">
 		select * from cart where member_id = #{member_id} order by cart_num
 	</select>
@@ -32,5 +36,9 @@
 		update cart set cart_amount = cart_amount + #{cart_amount} where 
 			item_key = #{item_key} and option_key = #{option_key} and member_id = #{member_id}
 	</update>
+	
+	<delete id="delAll" parameterType="String">
+		delete from cart where member_id = #{member_id}
+	</delete>
 
 </mapper>  

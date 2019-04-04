@@ -1,6 +1,7 @@
 package service;
 
 import dto.MemberDTO;
+import dto.OrderDTO;
 
 public interface MemberService {
 	public void insertProcess(MemberDTO mdto);
@@ -11,4 +12,6 @@ public interface MemberService {
 	public int findPwPro(MemberDTO dto);	
 	public void updatePwdPro(MemberDTO dto);
 	public MemberDTO infoUserProcess(String member_id);
+	public void update_useMileageProcess(OrderDTO orderDto);
+	public void update_plusMileageProcess(OrderDTO orderDto);
 }

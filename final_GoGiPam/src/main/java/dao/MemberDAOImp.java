@@ -3,6 +3,7 @@ package dao;
 import org.mybatis.spring.SqlSessionTemplate;
 
 import dto.MemberDTO;
+import dto.OrderDTO;
 
 public class MemberDAOImp implements MemberDAO {
 	private SqlSessionTemplate sqlSession;
@@ -57,6 +58,18 @@ public class MemberDAOImp implements MemberDAO {
 	@Override
 	public MemberDTO infoUser(String member_id) {
 		return sqlSession.selectOne("member.infoUser", member_id);
+	}
+
+	@Override
+	public void update_useMileage(OrderDTO orderDto) {
+		sqlSession.update("member.update_UseMileage", orderDto);
+		
+	}
+
+	@Override
+	public void update_plusMileage(OrderDTO orderDto) {
+		sqlSession.update("member.update_PlusMileage", orderDto);
+		
 	}
 
 }

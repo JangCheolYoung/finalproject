@@ -2,6 +2,7 @@ package service;
 
 import dao.MemberDAO;
 import dto.MemberDTO;
+import dto.OrderDTO;
 
 public class MemberServiceImp implements MemberService {
 	private MemberDAO mdao;
@@ -53,5 +54,17 @@ public class MemberServiceImp implements MemberService {
 	@Override
 	public MemberDTO infoUserProcess(String member_id) {
 		return mdao.infoUser(member_id);
+	}
+
+	@Override
+	public void update_useMileageProcess(OrderDTO orderDto) {
+		mdao.update_useMileage(orderDto);
+		
+	}
+
+	@Override
+	public void update_plusMileageProcess(OrderDTO orderDto) {
+		mdao.update_plusMileage(orderDto);
+		
 	}
 }

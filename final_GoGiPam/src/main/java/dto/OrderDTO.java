@@ -14,6 +14,42 @@ public class OrderDTO {
 	private String member_id;
 	private String order_method;
 	private String order_status;
+	private String address;
+	private String address_detail;
+	private String receiver_name;
+	private String receiver_tel;
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getAddress_detail() {
+		return address_detail;
+	}
+
+	public void setAddress_detail(String address_detail) {
+		this.address_detail = address_detail;
+	}
+
+	public String getReceiver_name() {
+		return receiver_name;
+	}
+
+	public void setReceiver_name(String receiver_name) {
+		this.receiver_name = receiver_name;
+	}
+
+	public String getReceiver_tel() {
+		return receiver_tel;
+	}
+
+	public void setReceiver_tel(String receiver_tel) {
+		this.receiver_tel = receiver_tel;
+	}
+
 	private Date order_date;
 
 	public Date getOrder_date() {

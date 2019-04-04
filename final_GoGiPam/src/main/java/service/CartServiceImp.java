@@ -46,4 +46,15 @@ public class CartServiceImp implements CartService {
 		return cdao.dupChkCart(cdto);
 	}
 
+	@Override
+	public void deleteAllCartProcess(String member_id) {
+		cdao.deleteAllCart(member_id);
+		
+	}
+
+	@Override
+	public int countCartProcess(String member_id) {
+		return cdao.countCart(member_id);
+	}
+
 }

@@ -503,11 +503,7 @@
 			}
 			
 			if(cardOrDeposit == "deposit") {
-					
-			}
-			
-			if(cardOrDeposit == "card") {
-				var status = "주문확인";
+				var status = "입금대기";
 				var tel = '${userInfo.member_tel}';
 				var order_num = tel.substring(tel.length-4, tel.length);
 				var member_id = '<%= session.getAttribute("member_id")%>';
@@ -515,9 +511,6 @@
 				var order_usemileage = $('#useMileage').text().trim();
 				var order_plusmileage = $('#add_mileage').text().trim();
 				
-				alert(order_usemileage);
-				alert(order_plusmileage);
-				alert(fullprice);
 				if('${cardDefault.card_num_seq}' == null)
 					$('#cardError').modal();
 				else {
@@ -535,6 +528,45 @@
 						},
 						success : function() {
 							$(location).attr('href','payOk.do');
+						}
+					});
+				}	
+			}
+			
+			if(cardOrDeposit == "card") {
+				var status = "주문확인";
+				var tel = '${userInfo.member_tel}';
+				var order_num = tel.substring(tel.length-4, tel.length);
+				var member_id = '<%= session.getAttribute("member_id")%>';
+				var fullprice = $('#final_Price').text().trim();
+				var order_usemileage = $('#useMileage').text().trim();
+				var order_plusmileage = $('#add_mileage').text().trim();
+				var address = "${addressDefault.address}";
+				var address_detail = "${addressDefault.address_detail}";
+				var receiver_name = "${addressDefault.receiver_name}";
+				var receiver_tel = "${addressDefault.receiver_tel}"; 
+				
+				if('${cardDefault.card_num_seq}' == null)
+					$('#cardError').modal();
+				else {
+					$.ajax({
+						url: "purchase_insert.do",
+						type: "POST",
+						data : {
+							"order_method" : cardOrDeposit,
+							"order_status" : status,
+							"member_id" : member_id,
+							"order_num" : order_num,
+							"order_fullprice" : (Number)(fullprice),
+							"order_usemileage" : (Number)(order_usemileage),
+							"order_plusmileage" : (Number)(order_plusmileage),
+							"address" : address,
+							"address_detail" : address_detail,
+							"receiver_name" : receiver_name,
+							"receiver_tel" : receiver_tel
+						},
+						success : function() {
+							$(location).attr('href','payOK.do');
 						}
 					});
 				}

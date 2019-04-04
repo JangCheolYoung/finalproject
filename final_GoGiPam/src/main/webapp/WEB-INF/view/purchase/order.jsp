@@ -703,7 +703,22 @@ $(document).ready(function () {
 		$('#orderBox_address_detail').text(res.address_detail);
 	}
 	///////////////////////////////////////////////////////////// 선택하기
+
+	$('#order_submitBtn').on('click', function() {
+		if($('#orderBox_receiver_name').text().trim() != "" &&
+				$('#orderBox_receiver_tel').text().trim() != "" &&
+					$('#orderBox_address').text().trim != "" &&
+						$('#orderBox_address_detail').text().trim() != "" && ${countCart > 0}) {
+			$(location).attr('href', 'purchase.do');
+		} else if (${countCart <= 0}) {
+			$('#SubmiterrModal2').modal();
+		} else {
+			$('#SubmiterrModal').modal();
+		}
+	});
 })
+
+
 </script>
 
 </head>
@@ -798,7 +813,7 @@ $(document).ready(function () {
 	</div>
 	
 	<div style="margin-top: 40px; width: 780px; margin-left: auto; margin-right: auto; height: 177px">
-		<button id="order_submitBtn">
+		<button id="order_submitBtn" type="button">
 			다음단계
 		</button>
 	</div>
@@ -1043,6 +1058,7 @@ $(document).ready(function () {
    	</div>
 </div>
 
+<!-- 전화번호 모달 -->
 <div class="modal modal-center fade" id="error2Modal" role="dialog">
    	<div class="modal-dialog modal-center" role="document">
      		<div class="modal-content">
@@ -1051,6 +1067,38 @@ $(document).ready(function () {
        		</div>
        	<div class="modal-body" style="text-align: center; font-size: 15px;">
          		<p>전화번호를 제대로 입력해 주셔야 합니다.</p>
+       	</div>
+       	<div class="modal-footer" style="border-top: none;">
+       	</div>
+     		</div>
+   	</div>
+</div>
+
+<!-- 기본 주소지가 없는데 눌렀을 경우 -->
+<div class="modal modal-center fade" id="SubmiterrModal" role="dialog">
+   	<div class="modal-dialog modal-center" role="document">
+     		<div class="modal-content">
+       		<div class="modal-header" style="border-bottom: none;">
+         			<button type="button" class="close" data-dismiss="modal">&times;</button>
+       		</div>
+       	<div class="modal-body" style="text-align: center; font-size: 15px;">
+         		<p>기본 주소지를 등록하지 않으셨습니다.</p>
+       	</div>
+       	<div class="modal-footer" style="border-top: none;">
+       	</div>
+     		</div>
+   	</div>
+</div>
+
+<!-- 장바구니가 없는데 눌렀을 경우 -->
+<div class="modal modal-center fade" id="SubmiterrModal2" role="dialog">
+   	<div class="modal-dialog modal-center" role="document">
+     		<div class="modal-content">
+       		<div class="modal-header" style="border-bottom: none;">
+         			<button type="button" class="close" data-dismiss="modal">&times;</button>
+       		</div>
+       	<div class="modal-body" style="text-align: center; font-size: 15px;">
+         		<p>장바구니가 비었습니다.</p>
        	</div>
        	<div class="modal-footer" style="border-top: none;">
        	</div>

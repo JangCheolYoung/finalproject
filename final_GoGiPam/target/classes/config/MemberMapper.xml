@@ -41,5 +41,15 @@
 		update members set member_pwd = #{member_pwd} where member_id = #{member_id}
 	</update>
 	
-	<!-- 적립금  -->
+	<!-- 적립금 사용(결제 완료 시점에서 빼야함)  -->
+	<update id="update_UseMileage" parameterType="dto.OrderDTO">
+		update members set member_mileage = member_mileage - #{order_usemileage} 
+		where member_id = #{member_id}
+	</update>
+	
+	<!-- 적립금 적립(구매 확정 시점에서 더해야함)  -->
+	<update id="update_PlusMileage" parameterType="dto.OrderDTO">
+		update members set member_mileage = member_mileage + #{order_plusmileage} 
+		where member_id = #{member_id}
+	</update>
   </mapper>
