@@ -7,7 +7,8 @@ public class OrderDTO {
 	private int order_amount;
 	private int total_price;
 	private int order_fullprice;
-	private int order_mileage;
+	private int order_usemileage;
+	private int order_plusmileage;
 	private String option_key;
 	private String item_key;
 	private String member_id;
@@ -27,14 +28,22 @@ public class OrderDTO {
 		this.order_fullprice = order_fullprice;
 	}
 
-	public int getOrder_mileage() {
-		return order_mileage;
+	public int getOrder_usemileage() {
+		return order_usemileage;
 	}
 
-	public void setOrder_mileage(int order_mileage) {
-		this.order_mileage = order_mileage;
+	public void setOrder_usemileage(int order_usemileage) {
+		this.order_usemileage = order_usemileage;
+	}
+	
+	public int getOrder_plusmileage() {
+		return order_plusmileage;
 	}
 
+	public void setOrder_plusmileage(int order_plusmileage) {
+		this.order_plusmileage = order_plusmileage;
+	}
+	
 	public void setOrder_date(Date order_date) {
 		this.order_date = order_date;
 	}

@@ -34,8 +34,8 @@
    		on(ca.member_id != #{member_id})
 
 		when not matched then
-    	insert (od.order_num, od.item_key, od.order_amount, od.total_price, od.option_key, od.member_id, od.order_method, od.order_status, od.order_date) 
-    	values (#{order_num}, ca.item_key, ca.cart_amount, (ca.cart_amount * ca.cart_price), ca.option_key, #{member_id}, #{order_method}, #{order_status}, sysdate)				
+    	insert (od.order_num, od.item_key, od.order_amount, od.total_price, od.option_key, od.member_id, od.order_method, od.order_status, od.order_date, od.order_fullprice, od.order_usemileage, od.order_plusmileage) 
+    	values (#{order_num}, ca.item_key, ca.cart_amount, (ca.cart_amount * ca.cart_price), ca.option_key, #{member_id}, #{order_method}, #{order_status}, sysdate, #{order_fullprice}, #{order_usemileage}, #{order_plusmileage})				
 	</insert>
 	
 	<update id="orderStatusUpdate" parameterType="String">

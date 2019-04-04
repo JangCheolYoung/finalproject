@@ -9,5 +9,4 @@ public interface OrderDAO {
 	public void orderInsert(OrderDTO orderDto);
 	public void orderStatusUpdate(OrderDTO orderDto);
 	public void orderDelete(OrderDTO orderDto);
-	public void orderSeq();
 }

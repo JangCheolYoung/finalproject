@@ -40,11 +40,6 @@ public class OrderDAOImp implements OrderDAO{
 		sqlSession.delete("order.orderDelete", orderDto);
 		
 	}
-
-	@Override
-	public void orderSeq() {
-		sqlSession.selectOne("order.orderSeq");
-		
-	}
+	
 	
 }

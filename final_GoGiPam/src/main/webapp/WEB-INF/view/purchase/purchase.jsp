@@ -498,7 +498,6 @@
 		$('#purchase_submitBtn').on('click', function() {
 			var cardOrDeposit = $('input:radio[name="radio-card/deposit"]:checked').val();
 			
-			alert(cardOrDeposit);
 			if(cardOrDeposit == null) {
 				$('#payMethodError').modal();
 			}
@@ -512,8 +511,13 @@
 				var tel = '${userInfo.member_tel}';
 				var order_num = tel.substring(tel.length-4, tel.length);
 				var member_id = '<%= session.getAttribute("member_id")%>';
+				var fullprice = $('#final_Price').text().trim();
+				var order_usemileage = $('#useMileage').text().trim();
+				var order_plusmileage = $('#add_mileage').text().trim();
 				
-				
+				alert(order_usemileage);
+				alert(order_plusmileage);
+				alert(fullprice);
 				if('${cardDefault.card_num_seq}' == null)
 					$('#cardError').modal();
 				else {
@@ -525,12 +529,13 @@
 							"order_status" : status,
 							"member_id" : member_id,
 							"order_num" : order_num,
-							"item_key" : '10',
-							"option_key" : '10',
-							"order_amount" : '10',
-							"total_price" : 10							
+							"order_fullprice" : (Number)(fullprice),
+							"order_usemileage" : (Number)(order_usemileage),
+							"order_plusmileage" : (Number)(order_plusmileage)
 						},
-						success : alert("기모링")
+						success : function() {
+							$(location).attr('href','payOk.do');
+						}
 					});
 				}
 					

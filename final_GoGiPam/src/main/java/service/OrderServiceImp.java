@@ -40,10 +40,5 @@ public class OrderServiceImp implements OrderService {
 		orderDao.orderDelete(orderDto);
 		return orderDao.orderList(orderDto.getMember_id());
 	}
-
-	@Override
-	public void orderSeqProcess() {
-		orderDao.orderSeq();
-	}
 	
 }
