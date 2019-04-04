@@ -645,7 +645,6 @@ public class MainController {
 	@RequestMapping(value = "/purchase_insert.do", method = RequestMethod.POST)
 	@ResponseBody
 	public List<OrderDTO> orderInsert(OrderDTO orderDto) {
-		orderService.orderSeqProcess();
 		return orderService.orderInsertProcess(orderDto);
 	}
 	

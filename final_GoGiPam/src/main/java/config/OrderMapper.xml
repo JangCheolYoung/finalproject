@@ -8,14 +8,34 @@
 		select * from orders where member_id = #{member_id}
 	</select>
 	
-	<select id="orderSeq" resultType="int">
-		select (LPAD(order_seq.NEXTVAL,4,0)) from dual
-	</select>
+	<insert id="orderInsert" parameterType="dto.OrderDTO">
+		<selectKey order="BEFORE" keyProperty="order_num" resultType="long">
+        	select #{order_num} || to_number(to_char(sysdate,'YYMMDD') || nvl(to_char(max(substr(order_num,11))),'0000'))+1
+        	from orders
+         	where to_char(order_date,'YYYYMMDD') = to_char(sysdate,'YYYYMMDD')
+   		</selectKey>
+		
+		<!-- insert into orders 
+		values( #{order_num}, #{item_key}, #{order_amount}, #{total_price},
+				#{option_key}, #{member_id}, #{order_method}, #{order_status}, sysdate) -->
 	
-	<insert id="orderInsert" parameterType="dto.OrderDTO">	
-		insert into orders 
-		values(#{order_num}||'-'||(to_char(sysdate, 'MMDD'))||'-'||(LPAD(order_seq.currVAL,4,0)), #{item_key}, #{order_amount}, #{total_price},
-				#{option_key}, #{member_id}, #{order_method}, #{order_status}, sysdate)
+		<!-- insert into orders 
+		select( #{order_num}, #{item_key}, #{order_amount}, #{total_price},
+				#{option_key}, #{member_id}, #{order_method}, #{order_status}, sysdate) -->
+		
+		<!-- merge into orders od using cart ca
+   		on(ca.member_id != #{member_id})
+
+		when not matched then
+    	insert (od.order_num, od.item_key, od.order_amount, od.total_price, od.option_key, od.member_id, od.order_method, od.order_status, od.order_date) 
+    	values (#{order_num}, ca.item_key, ca.cart_amount, (ca.cart_amount * ca.cart_price), ca.option_key, #{member_id}, #{order_method}, #{order_status}, sysdate) -->				
+	
+		merge into orders od using (select * from cart where member_id = #{member_id}) ca
+   		on(ca.member_id != #{member_id})
+
+		when not matched then
+    	insert (od.order_num, od.item_key, od.order_amount, od.total_price, od.option_key, od.member_id, od.order_method, od.order_status, od.order_date) 
+    	values (#{order_num}, ca.item_key, ca.cart_amount, (ca.cart_amount * ca.cart_price), ca.option_key, #{member_id}, #{order_method}, #{order_status}, sysdate)				
 	</insert>
 	
 	<update id="orderStatusUpdate" parameterType="String">

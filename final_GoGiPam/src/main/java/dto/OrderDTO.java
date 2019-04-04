@@ -3,9 +3,11 @@ package dto;
 import java.util.Date;
 
 public class OrderDTO {
-	private String order_num;
+	private long order_num;
 	private int order_amount;
 	private int total_price;
+	private int order_fullprice;
+	private int order_mileage;
 	private String option_key;
 	private String item_key;
 	private String member_id;
@@ -17,15 +19,31 @@ public class OrderDTO {
 		return order_date;
 	}
 
+	public int getOrder_fullprice() {
+		return order_fullprice;
+	}
+
+	public void setOrder_fullprice(int order_fullprice) {
+		this.order_fullprice = order_fullprice;
+	}
+
+	public int getOrder_mileage() {
+		return order_mileage;
+	}
+
+	public void setOrder_mileage(int order_mileage) {
+		this.order_mileage = order_mileage;
+	}
+
 	public void setOrder_date(Date order_date) {
 		this.order_date = order_date;
 	}
 
-	public String getOrder_num() {
+	public long getOrder_num() {
 		return order_num;
 	}
 
-	public void setOrder_num(String order_num) {
+	public void setOrder_num(long order_num) {
 		this.order_num = order_num;
 	}
 
